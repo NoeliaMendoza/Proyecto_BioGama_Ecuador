@@ -1,0 +1,4 @@
+{
+    "estado":  "No se completo la consulta de SonarQube",
+    "accion":  "Verificar servidor, token y permisos de lectura. Las evidencias locales ya fueron copiadas."
+}

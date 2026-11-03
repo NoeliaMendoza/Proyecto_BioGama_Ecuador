@@ -1,0 +1,6 @@
+{
+    "consultasFallidas":  [
+
+                          ],
+    "nota":  "401: credencial rechazada; 403: revisar permisos; otros codigos requieren revisar la consulta y el servidor. No contiene tokens."
+}

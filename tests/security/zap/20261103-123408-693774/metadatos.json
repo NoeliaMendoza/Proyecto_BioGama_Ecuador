@@ -1,0 +1,17 @@
+{
+    "objetivo":  "http://host.docker.internal:30080",
+    "imagenHerramienta":  "sha256:9624669db72f54d86c4b46a7064518bd9bf79d8c61a4c31befa9923489f328af",
+    "imagenAplicacion":  "biogama-web:k8s-v7",
+    "codigoSalida":  0,
+    "herramienta":  "ghcr.io/zaproxy/zaproxy:stable",
+    "fechaEcuador":  "2026-11-03T12:34:08.9755336-05:00",
+    "informacionAplicacion":  {
+                                  "application":  "BioGamaEcuador",
+                                  "version":  "k8s-v7",
+                                  "pod":  "biogama-web-7448869cfd-g9xdx",
+                                  "timestamp":  "2026-11-03T17:34:08.3653419Z"
+                              },
+    "alcance":  "Baseline anonimo: spider tradicional y reglas pasivas, sin envio de formularios ni escaneo activo.",
+    "limitaciones":  "Evalua la imagen desplegada, no automaticamente los cambios locales; no cubre sesiones autenticadas, logica de pagos ni garantiza ausencia de vulnerabilidades.",
+    "validez":  "No concluyente: fallo DNS de host.docker.internal; solo dos URLs registradas. No usar como evidencia de ausencia de vulnerabilidades."
+}

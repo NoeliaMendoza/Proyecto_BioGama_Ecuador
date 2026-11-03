@@ -1,0 +1,21 @@
+{
+    "consultasFallidas":  [
+                              {
+                                  "consulta":  "/api/qualitygates/project_status?projectKey=biogama-ecuador",
+                                  "http":  401
+                              },
+                              {
+                                  "consulta":  "/api/project_analyses/search?project=biogama-ecuador\u0026ps=10",
+                                  "http":  401
+                              },
+                              {
+                                  "consulta":  "/api/measures/component?component=biogama-ecuador\u0026metricKeys=ncloc,coverage,duplicated_lines_density,violations",
+                                  "http":  401
+                              },
+                              {
+                                  "consulta":  "/api/issues/search?componentKeys=biogama-ecuador\u0026resolved=false\u0026ps=100\u0026p=1",
+                                  "http":  401
+                              }
+                          ],
+    "nota":  "401: credencial rechazada; 403: revisar permisos; otros codigos requieren revisar la consulta y el servidor. No contiene tokens."
+}

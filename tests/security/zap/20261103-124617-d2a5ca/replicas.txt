@@ -1,0 +1,2 @@
+NAME          IMAGE                READY   AVAILABLE
+biogama-web   biogama-web:k8s-v8   2       2

@@ -1,0 +1,9 @@
+{
+    "consultasFallidas":  [
+                              {
+                                  "consulta":  "/api/project_analyses/search?project=biogama-ecuador\u0026ps=10",
+                                  "http":  403
+                              }
+                          ],
+    "nota":  "401: credencial rechazada; 403: revisar permisos; otros codigos requieren revisar la consulta y el servidor. No contiene tokens."
+}
