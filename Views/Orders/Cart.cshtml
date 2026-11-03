@@ -84,17 +84,18 @@ else
                                                     @Html.AntiForgeryToken()
                                                     <input type="hidden" name="detailId" value="@d.Id" />
                                                     <div class="input-group input-group-sm qty-group">
-                                                        <button type="button" class="btn btn-outline-secondary qty-btn" onclick="this.parentElement.querySelector('input[name=quantity]').stepDown(); this.closest('form').requestSubmit();">-</button>
-                                                        <input type="number" name="quantity" value="@d.Quantity" min="1"
+                                                        <button type="button" class="btn btn-outline-secondary qty-btn" data-quantity-step="down">-</button>
+                                                        <label class="visually-hidden" for="quantity-@d.Id">Cantidad</label>
+                                                        <input id="quantity-@d.Id" type="number" name="quantity" value="@d.Quantity" min="1"
                                                                max="@(d.Course?.AvailableSeats ?? d.PhysicalProduct?.AvailableStock ?? 99)"
                                                                class="form-control text-center qty-input" />
-                                                        <button type="button" class="btn btn-outline-secondary qty-btn" onclick="this.parentElement.querySelector('input[name=quantity]').stepUp(); this.closest('form').requestSubmit();">+</button>
+                                                        <button type="button" class="btn btn-outline-secondary qty-btn" data-quantity-step="up">+</button>
                                                     </div>
                                                 </form>
                                             </td>
                                             <td class="text-end cart-subtotal">$@d.Subtotal.ToString("N2")</td>
                                             <td class="text-center">
-                                                <form asp-action="DeleteDetail" method="post" onsubmit="return confirm('¿Eliminar este artículo?')">
+                                                <form asp-action="DeleteDetail" method="post" data-confirm="¿Eliminar este artículo?">
                                                     @Html.AntiForgeryToken()
                                                     <input type="hidden" name="detailId" value="@d.Id" />
                                                     <button type="submit" class="cart-remove-btn" title="Eliminar"><i class="bi bi-x-lg"></i></button>

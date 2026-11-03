@@ -122,7 +122,7 @@ else
 
                     @if (course?.StartDate > DateTime.UtcNow)
                     {
-                        <form asp-controller="MyCourses" asp-action="Cancel" method="post" class="mt-2" onsubmit="return confirm('¿Estás seguro de cancelar tu inscripción a este curso?');">
+                        <form asp-controller="MyCourses" asp-action="Cancel" method="post" class="mt-2" data-confirm="¿Estás seguro de cancelar tu inscripción a este curso?">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="enrollmentId" value="@enrollment.Id" />
                             <button type="submit" class="btn btn-outline-danger btn-sm w-100">

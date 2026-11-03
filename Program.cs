@@ -125,6 +125,7 @@ if (isMailWorker)
 }
 
 var app = builder.Build();
+app.UseMiddleware<BioGamaEcuador.Middleware.SecurityHeadersMiddleware>();
 
 var cultura = new CultureInfo("es-EC");
 CultureInfo.DefaultThreadCurrentCulture = cultura;
