@@ -4,9 +4,10 @@
     }
 
 <p class="text-muted mb-3">Materiales didácticos, kits de campo y recuerdos pensados para acercarte a la biodiversidad del Ecuador.</p>
+<p id="stockLiveStatus" class="text-muted small" role="status">Conectando disponibilidad en vivo...</p>
 <div class="d-flex gap-2 mb-3">
     <span class="badge badge-soft-primary fs-6 px-3 py-2"><i class="bi bi-box me-1"></i>@ViewBag.TotalProducts productos</span>
-    <span class="badge badge-soft-success fs-6 px-3 py-2"><i class="bi bi-check2-circle me-1"></i>@ViewBag.AvailableUnits unidades disponibles</span>
+    <span class="badge badge-soft-success fs-6 px-3 py-2"><i class="bi bi-check2-circle me-1"></i><span data-available-total>@ViewBag.AvailableUnits</span> unidades disponibles</span>
 </div>
     <div class="app-card filter-card mb-4">
         <div class="app-card-body">
@@ -35,7 +36,7 @@
             {
                 var available = p.Stock - p.ReservedStock;
                 var lowStock = available > 0 && available <= p.MinStock;
-                <article class="product-card @(available == 0 ? "product-card--sold-out" : "")">
+                <article data-product-id="@p.Id" class="product-card @(available <= 0 ? "product-card--sold-out" : "")">
                     <div class="product-card-image">
                         @if (!string.IsNullOrWhiteSpace(p.ImageUrl))
                         {
@@ -59,17 +60,14 @@
                             <div><span class="product-card-price">$@p.Price.ToString("N2", new System.Globalization.CultureInfo("es-EC"))</span><small>USD</small></div>
                             <span class="product-card-stock"><i class="bi bi-box2 me-1"></i>@available disponibles</span>
                         </div>
-                        @if (available > 0)
-                        {
-                            <form asp-controller="Orders" asp-action="CreateFromProduct" method="post" class="product-card-buy">
+                            <form asp-controller="Orders" asp-action="CreateFromProduct" method="post" class="product-card-buy @(available <= 0 ? "d-none" : "")">
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="productId" value="@p.Id" />
                                 <label class="visually-hidden" for="qty-@p.Id">Cantidad</label>
                                 <input id="qty-@p.Id" type="number" name="quantity" value="1" min="1" max="@available" class="form-control form-control-sm" />
                                 <button class="btn btn-primary btn-sm"><i class="bi bi-cart-plus me-1"></i>Agregar</button>
                             </form>
-                        }
-                        else { <button class="btn btn-outline-secondary btn-sm w-100" disabled>Producto agotado</button> }
+                        <button data-sold-out type="button" class="btn btn-outline-secondary btn-sm w-100 @(available > 0 ? "d-none" : "")" disabled>Producto agotado</button>
                     </div>
                 </article>
             }
@@ -82,4 +80,9 @@
             </ul><p class="app-pagination-info">Página @ViewBag.Page de @ViewBag.TotalPages</p></nav>
         }
     }
+
+@section Scripts {
+    <script src="~/lib/signalr/signalr.min.js"></script>
+    <script src="~/js/product-stock.js" asp-append-version="true"></script>
+}
 
