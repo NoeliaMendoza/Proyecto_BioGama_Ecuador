@@ -15,7 +15,7 @@ public class AuditService : IAuditService
         _db = db;
     }
 
-    public async Task LogAsync(string action, string entity, string entityId, string? oldValue, string? newValue, string userId, string? ipAddress = null)
+    public async Task LogAsync(string action, string entity, string? entityId, string? oldValue, string? newValue, string userId, string? ipAddress = null)
     {
         _logger.LogInformation(
             "[AUDIT] Action={Action}, Entity={Entity}, EntityId={EntityId}, UserId={UserId}, IP={IP}, Old={Old}, New={New}",

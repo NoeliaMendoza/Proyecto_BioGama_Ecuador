@@ -8,55 +8,45 @@ public static class IdentitySeeder
     {
         var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
         var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+        var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+        var logger = serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger(nameof(IdentitySeeder));
 
         string[] roles = { "Administrador", "Investigador", "UsuarioPublico" };
-
         foreach (var role in roles)
         {
             if (!await roleManager.RoleExistsAsync(role))
-                await roleManager.CreateAsync(new IdentityRole(role));
+                EnsureSuccess(await roleManager.CreateAsync(new IdentityRole(role)), "crear un rol inicial");
         }
 
-        // Usuario Administrador
-        string emailAdmin = "admin@biogama.ec";
-        string passwordAdmin = "Admin123*";
+        await CreateAccountAsync("admin@biogama.ec", "Administrador", "Admin");
+        await CreateAccountAsync("investigador@biogama.ec", "Investigador", "Researcher");
+        await CreateAccountAsync("usuario@biogama.ec", "UsuarioPublico", "Public");
 
-        var admin = await userManager.FindByEmailAsync(emailAdmin);
-        if (admin == null)
+        var additionalEmail = configuration["SeedUsers:AdditionalAdminEmail"];
+        if (!string.IsNullOrWhiteSpace(additionalEmail))
+            await CreateAccountAsync(additionalEmail, "Administrador", "AdditionalAdmin");
+
+        async Task CreateAccountAsync(string email, string role, string accountKey)
         {
-            admin = new IdentityUser { UserName = emailAdmin, Email = emailAdmin, EmailConfirmed = true };
-            await userManager.CreateAsync(admin, passwordAdmin);
-            await userManager.AddToRoleAsync(admin, "Administrador");
-        }
+            // No cambia claves ni privilegios de cuentas existentes.
+            if (await userManager.FindByEmailAsync(email) is not null) return;
 
-        // Usuario Investigador de prueba
-        string emailInv = "investigador@biogama.ec";
-        var inv = await userManager.FindByEmailAsync(emailInv);
-        if (inv == null)
-        {
-            inv = new IdentityUser { UserName = emailInv, Email = emailInv, EmailConfirmed = true };
-            await userManager.CreateAsync(inv, "Invest123*");
-            await userManager.AddToRoleAsync(inv, "Investigador");
-        }
+            var password = configuration[$"SeedUsers:{accountKey}Password"];
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                logger.LogWarning("Cuenta inicial {AccountKey} omitida: no se configuro su clave", accountKey);
+                return;
+            }
 
-        // Usuario Público de prueba (registrado, solo lectura)
-        string emailPub = "usuario@biogama.ec";
-        var pub = await userManager.FindByEmailAsync(emailPub);
-        if (pub == null)
-        {
-            pub = new IdentityUser { UserName = emailPub, Email = emailPub, EmailConfirmed = true };
-            await userManager.CreateAsync(pub, "Usuario123*");
-            await userManager.AddToRoleAsync(pub, "UsuarioPublico");
+            var user = new IdentityUser { UserName = email, Email = email, EmailConfirmed = true };
+            EnsureSuccess(await userManager.CreateAsync(user, password), "crear una cuenta inicial");
+            EnsureSuccess(await userManager.AddToRoleAsync(user, role), "asignar un rol inicial");
         }
+    }
 
-        // Usuario administrador
-        string emailWiliam = "wminerva252@gmail.com";
-        var wiliam = await userManager.FindByEmailAsync(emailWiliam);
-        if (wiliam == null)
-        {
-            wiliam = new IdentityUser { UserName = emailWiliam, Email = emailWiliam, EmailConfirmed = true };
-            await userManager.CreateAsync(wiliam, "Admin123*");
-            await userManager.AddToRoleAsync(wiliam, "Administrador");
-        }
+    private static void EnsureSuccess(IdentityResult result, string operation)
+    {
+        if (!result.Succeeded)
+            throw new InvalidOperationException($"No se pudo {operation}: {string.Join(", ", result.Errors.Select(e => e.Code))}");
     }
 }

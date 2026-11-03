@@ -95,7 +95,7 @@ namespace BioGamaEcuador.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrador,Investigador")]
-        public async Task<IActionResult> Create([Bind("Id,PlaceName,Altitude,Latitude,Longitude,NaturalReserveId,IsActive,CreatedAt")] Location location)
+        public async Task<IActionResult> Create([Bind("PlaceName,Altitude,Latitude,Longitude,NaturalReserveId,IsActive,CreatedAt")] Location location)
         {
             if (ModelState.IsValid)
             {

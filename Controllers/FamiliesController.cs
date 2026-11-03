@@ -125,7 +125,7 @@ namespace BioGamaEcuador.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_context.Families.Any(e => e.Id == family.Id))
+                    if (!await _context.Families.AnyAsync(e => e.Id == family.Id))
                         return NotFound();
                     else
                         throw;

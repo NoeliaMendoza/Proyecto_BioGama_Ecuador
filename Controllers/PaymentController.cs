@@ -5,6 +5,8 @@ using BioGamaEcuador.Data;
 using BioGamaEcuador.Models.Sales;
 using BioGamaEcuador.Services;
 using BioGamaEcuador.Services.Payments;
+using System.Text.Json;
+using System.Security.Claims;
 
 namespace BioGamaEcuador.Controllers;
 
@@ -17,6 +19,7 @@ public class PaymentController : Controller
     private readonly IInventoryService _inventory;
     private readonly IEmailService _email;
     private readonly IAuditService _audit;
+    private readonly StockNotifications _stockNotifications;
 
     public PaymentController(
         AppDbContext context,
@@ -24,7 +27,8 @@ public class PaymentController : Controller
         PayPalService payPal,
         IInventoryService inventory,
         IEmailService email,
-        IAuditService audit)
+        IAuditService audit,
+        StockNotifications stockNotifications)
     {
         _context = context;
         _payPhoneService = payPhoneService;
@@ -32,13 +36,16 @@ public class PaymentController : Controller
         _inventory = inventory;
         _email = email;
         _audit = audit;
+        _stockNotifications = stockNotifications;
     }
 
     public async Task<IActionResult> CreateLink(Guid orderId)
     {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var isAdmin = User.IsInRole("Administrador");
         var order = await _context.Orders
             .Include(o => o.Details)
-            .FirstOrDefaultAsync(o => o.Id == orderId);
+            .FirstOrDefaultAsync(o => o.Id == orderId && o.Status == "Pending" && (isAdmin || o.UserId == userId));
 
         if (order == null) return NotFound();
 
@@ -84,10 +91,12 @@ public class PaymentController : Controller
 
     public async Task<IActionResult> Details(Guid id)
     {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var isAdmin = User.IsInRole("Administrador");
         var payment = await _context.Payments
             .Include(p => p.Order)
             .ThenInclude(o => o.Details)
-            .FirstOrDefaultAsync(p => p.Id == id);
+            .FirstOrDefaultAsync(p => p.Id == id && (isAdmin || p.Order.UserId == userId));
 
         if (payment == null) return NotFound();
 
@@ -95,6 +104,7 @@ public class PaymentController : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> MarkAsPaid(Guid id)
     {
@@ -138,6 +148,7 @@ public class PaymentController : Controller
 
             await _context.SaveChangesAsync();
             await tx.CommitAsync();
+            await _stockNotifications.PublishAsync();
         }
         catch
         {
@@ -153,23 +164,37 @@ public class PaymentController : Controller
 
     [AllowAnonymous]
     [HttpPost("api/payments/payphone/webhook")]
-    public async Task<IActionResult> Webhook([FromBody] PayPhoneWebhook body)
+    public async Task<IActionResult> Webhook([FromBody] PayPhoneWebhook? body)
     {
-        if (body == null || string.IsNullOrWhiteSpace(body.ClientTransactionId))
+        if (!ModelState.IsValid || body == null || string.IsNullOrWhiteSpace(body.ClientTransactionId) || body.ClientTransactionId.Length > 100)
             return BadRequest("Falta clientTransactionId.");
 
-        var status = body.Status ?? body.TransactionStatus ?? "";
         var payment = await _context.Payments
             .Include(p => p.Order).ThenInclude(o => o.Details)
-            .FirstOrDefaultAsync(p => p.ExternalId == body.ClientTransactionId);
+            .FirstOrDefaultAsync(p => p.ExternalId == body.ClientTransactionId && p.Provider == "PayPhone");
 
         if (payment == null) return Ok("not_found");
         if (payment.Status != "Pending") return Ok(payment.Status);
 
+        VerifiedPayPhoneTransaction verified;
+        try
+        {
+            verified = await _payPhoneService.GetTransactionAsync(body.ClientTransactionId, HttpContext.RequestAborted);
+        }
+        catch (Exception ex) when (ex is HttpRequestException or InvalidOperationException or JsonException or OperationCanceledException)
+        {
+            return StatusCode(StatusCodes.Status503ServiceUnavailable, "No se pudo verificar el pago con PayPhone.");
+        }
+        var expectedCents = decimal.Round(payment.Amount * 100, 0, MidpointRounding.AwayFromZero);
+        if (verified.ClientTransactionId != payment.ExternalId || verified.Amount != expectedCents ||
+            !string.Equals(verified.Currency, payment.Currency, StringComparison.OrdinalIgnoreCase))
+            return BadRequest("La transaccion verificada no coincide con el pago.");
+        if (verified.StatusCode is not (2 or 3)) return Accepted("pending_verification");
+
         await using var tx = await _context.Database.BeginTransactionAsync();
         try
         {
-            var approved = status == "APPROVED";
+            var approved = verified.StatusCode == 3;
             payment.Status = approved ? "Approved" : "Failed";
             payment.ConfirmedAt = approved ? DateTime.UtcNow : null;
 
@@ -219,6 +244,7 @@ public class PaymentController : Controller
 
             await _context.SaveChangesAsync();
             await tx.CommitAsync();
+            await _stockNotifications.PublishAsync();
         }
         catch
         {
@@ -239,27 +265,21 @@ public class PaymentController : Controller
         if (string.IsNullOrWhiteSpace(token))
             return BadRequest("Falta token de PayPal.");
 
-        var capture = await _payPal.CaptureOrderAsync(token);
-
-        var existing = await _context.Payments.FirstOrDefaultAsync(p => p.ExternalId == token);
-        if (existing != null && existing.Status == "Approved")
-            return RedirectToActionResult(existing.OrderId);
-
-        var payment = existing ?? await _context.Payments
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var isAdmin = User.IsInRole("Administrador");
+        var payment = await _context.Payments
             .Include(p => p.Order).ThenInclude(o => o.Details)
-            .FirstOrDefaultAsync(p => p.ExternalId == token);
+            .FirstOrDefaultAsync(p => p.ExternalId == token && p.Provider == "PayPal" &&
+                (isAdmin || p.Order.UserId == userId));
 
         if (payment == null)
-        {
-            var order = await _context.Orders
-                .Include(o => o.Details)
-                .FirstOrDefaultAsync(o => o.Payment!.ExternalId == token);
-            if (order == null) return NotFound("Orden no encontrada.");
-            payment = order.Payment;
-        }
+            return NotFound("Orden o pago no encontrado.");
 
         if (payment.Status != "Pending")
             return RedirectToActionResult(payment.OrderId);
+
+        var capture = await _payPal.CaptureOrderAsync(token);
+        if (capture.Status != "COMPLETED") return BadRequest("PayPal no confirmo el pago.");
 
         await using var tx = await _context.Database.BeginTransactionAsync();
         try
@@ -298,6 +318,7 @@ public class PaymentController : Controller
 
             await _context.SaveChangesAsync();
             await tx.CommitAsync();
+            await _stockNotifications.PublishAsync();
         }
         catch
         {
@@ -322,7 +343,7 @@ public class PayPhoneWebhook
     public string? ClientTransactionId { get; set; }
     public string? Status { get; set; }
     public string? TransactionStatus { get; set; }
-    public decimal Amount { get; set; }
+    public decimal? Amount { get; set; }
     public string? Currency { get; set; }
     public string? Reference { get; set; }
 }

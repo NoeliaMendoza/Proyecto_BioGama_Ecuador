@@ -1,10 +1,11 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BioGamaEcuador.Models
 {
     public class Species
     {
-        public int Id { get; set; }
+        [BindRequired] public int Id { get; set; }
 
         [Required(ErrorMessage = "El nombre común es obligatorio.")]
         [StringLength(100, ErrorMessage = "El nombre común debe tener máximo {1} caracteres.")]
@@ -25,7 +26,7 @@ namespace BioGamaEcuador.Models
         [StringLength(300, ErrorMessage = "La URL de la imagen debe tener máximo {1} caracteres.")]
         public string ImageUrl { get; set; } = string.Empty;
 
-        public bool IsEndemic { get; set; } = false;
+        [BindRequired] public bool IsEndemic { get; set; } = false;
 
         [Required(ErrorMessage = "La familia es obligatoria.")]
         public int FamilyId { get; set; }

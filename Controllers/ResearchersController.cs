@@ -98,7 +98,7 @@ namespace BioGamaEcuador.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrador,Investigador")]
-        public async Task<IActionResult> Create([Bind("Id,Name,Institution,Email,Specialty,IsActive,CreatedAt")] Researcher researcher)
+        public async Task<IActionResult> Create([Bind("Name,Institution,Email,Specialty,IsActive,CreatedAt")] Researcher researcher)
         {
             if (ModelState.IsValid)
             {

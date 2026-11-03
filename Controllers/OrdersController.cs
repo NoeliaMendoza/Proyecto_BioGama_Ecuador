@@ -1,4 +1,6 @@
 using System.Text.RegularExpressions;
+using System.Security.Cryptography;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,14 +19,16 @@ public class OrdersController : Controller
     private readonly PayPalService _payPal;
     private readonly IInventoryService _inventory;
     private readonly IAuditService _audit;
+    private readonly StockNotifications _stockNotifications;
 
-    public OrdersController(AppDbContext context, IEmailService email, PayPalService payPal, IInventoryService inventory, IAuditService audit)
+    public OrdersController(AppDbContext context, IEmailService email, PayPalService payPal, IInventoryService inventory, IAuditService audit, StockNotifications stockNotifications)
     {
         _context = context;
         _email = email;
         _payPal = payPal;
         _inventory = inventory;
         _audit = audit;
+        _stockNotifications = stockNotifications;
     }
 
     public IActionResult Index() => RedirectToAction(nameof(Cart));
@@ -60,8 +64,21 @@ public class OrdersController : Controller
     private static string GenerateCode()
     {
         const string chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-        var random = Random.Shared;
-        return $"BG-{new string(Enumerable.Range(0, 6).Select(_ => chars[random.Next(chars.Length)]).ToArray())}";
+        return $"BG-{new string(Enumerable.Range(0, 6).Select(_ => chars[RandomNumberGenerator.GetInt32(chars.Length)]).ToArray())}";
+    }
+
+    private static bool IsValidPhone(string phone)
+    {
+        if (phone.Length > 16) return false;
+        try
+        {
+            return Regex.IsMatch(phone, @"^(\+593|00593|0)?\d{8,9}$",
+                RegexOptions.None, TimeSpan.FromMilliseconds(100));
+        }
+        catch (RegexMatchTimeoutException)
+        {
+            return false;
+        }
     }
 
     private record DetailRow(Guid Id, Guid OrderId, Guid? CourseId, Guid? PhysicalProductId, int Quantity, decimal UnitPrice);
@@ -165,6 +182,7 @@ public class OrdersController : Controller
             await RecalculateOrderTotalsAsync(cartId);
             await _context.SaveChangesAsync();
             await tx.CommitAsync();
+            await _stockNotifications.PublishAsync();
         }
         catch (Exception ex)
         {
@@ -187,6 +205,7 @@ public class OrdersController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateFromProduct(Guid productId, int quantity)
     {
+        if (quantity < 1) return BadRequest();
         var userId = await GetUserIdAsync();
 
         var available = await GetAvailableStockAsync(productId);
@@ -235,6 +254,7 @@ public class OrdersController : Controller
             await RecalculateOrderTotalsAsync(cartId);
             await _context.SaveChangesAsync();
             await tx.CommitAsync();
+            await _stockNotifications.PublishAsync();
 
             await _audit.LogAsync("OrderDetailAdded", "OrderDetail", existingDetailId?.ToString() ?? "new", null, $"ProductId={productId},Qty={quantity}", userId, HttpContext.Connection.RemoteIpAddress?.ToString());
             TempData["Success"] = "Producto agregado al carrito.";
@@ -326,6 +346,7 @@ public class OrdersController : Controller
 
             await RecalculateOrderTotalsAsync(detail.OrderId);
             await tx.CommitAsync();
+            await _stockNotifications.PublishAsync();
 
             var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
             await _audit.LogAsync("OrderDetailUpdated", "OrderDetail", detailId.ToString(), detail.Quantity.ToString(), quantity.ToString(), userId, ip);
@@ -379,6 +400,7 @@ public class OrdersController : Controller
             }
 
             await tx.CommitAsync();
+            await _stockNotifications.PublishAsync();
 
             var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
             await _audit.LogAsync("OrderDetailRemoved", "OrderDetail", detailId.ToString(), detail.Quantity.ToString(), null, userId, ip);
@@ -423,7 +445,7 @@ public class OrdersController : Controller
             .FirstOrDefaultAsync(o => o.Id == orderId && o.UserId == userId && o.Status == "Pending");
         if (order == null) return NotFound();
 
-        if (!string.IsNullOrWhiteSpace(Phone) && !Regex.IsMatch(Phone, @"^(\+593|00593|0)?\d{8,9}$"))
+        if (!string.IsNullOrWhiteSpace(Phone) && !IsValidPhone(Phone))
         {
             ModelState.AddModelError("Phone", "Ingresa un número telefónico válido de Ecuador.");
             return View(order);
@@ -539,9 +561,11 @@ public class OrdersController : Controller
     }
 
     [HttpPost]
-    [IgnoreAntiforgeryToken]
-    public async Task<IActionResult> CreatePayPalOrder([FromBody] CreateOrderRequest req)
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CreatePayPalOrder([FromBody] CreateOrderRequest? req)
     {
+        if (!ModelState.IsValid || req is null || req.OrderId == Guid.Empty)
+            return BadRequest("Se requiere una orden valida.");
         var userId = await GetUserIdAsync();
         var order = await _context.Orders
             .FirstOrDefaultAsync(o => o.Id == req.OrderId && o.UserId == userId && o.Status == "Pending");
@@ -575,9 +599,11 @@ public class OrdersController : Controller
     }
 
     [HttpPost]
-    [IgnoreAntiforgeryToken]
-    public async Task<IActionResult> CapturePayPalOrder([FromBody] CaptureOrderRequest req)
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CapturePayPalOrder([FromBody] CaptureOrderRequest? req)
     {
+        if (!ModelState.IsValid || req is null || string.IsNullOrWhiteSpace(req.PayPalOrderId) || req.PayPalOrderId.Length > 128)
+            return BadRequest("Se requiere un identificador de pago valido.");
         var userId = await GetUserIdAsync();
         var payment = await _context.Payments
             .Include(p => p.Order).ThenInclude(o => o.Details)
@@ -625,6 +651,7 @@ public class OrdersController : Controller
 
             await _context.SaveChangesAsync();
             await tx.CommitAsync();
+            await _stockNotifications.PublishAsync();
         }
         catch
         {
@@ -636,6 +663,6 @@ public class OrdersController : Controller
         return Json(new { success = true, redirect = Url.Action("Confirmation", new { id = payment.OrderId }) });
     }
 
-    public record CreateOrderRequest(Guid OrderId);
+    public record CreateOrderRequest([property: JsonRequired] Guid OrderId);
     public record CaptureOrderRequest(string PayPalOrderId);
 }

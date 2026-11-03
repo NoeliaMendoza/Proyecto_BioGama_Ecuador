@@ -15,9 +15,9 @@ namespace BioGamaEcuador.Areas.Identity.Pages.Account
             _userManager = userManager;
         }
 
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
-        public async Task<IActionResult> OnGetAsync(string email, string returnUrl = null)
+        public async Task<IActionResult> OnGetAsync(string? email, string? returnUrl = null)
         {
             if (email == null)
                 return RedirectToPage("/Index");

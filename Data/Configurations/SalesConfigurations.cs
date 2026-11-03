@@ -8,7 +8,14 @@ namespace BioGamaEcuador.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Course> b)
         {
-            b.ToTable("Courses");
+            b.ToTable("Courses", table =>
+            {
+                table.HasCheckConstraint("CK_Course_TotalSeats_Positive", "\"TotalSeats\" > 0");
+                table.HasCheckConstraint("CK_Course_Seats_Consistent", "\"ReservedSeats\" >= 0 AND \"ConfirmedSeats\" >= 0 AND (\"ReservedSeats\" + \"ConfirmedSeats\") <= \"TotalSeats\"");
+                table.HasCheckConstraint("CK_Course_Dates_Valid", "\"EndDate\" >= \"StartDate\"");
+                table.HasCheckConstraint("CK_Course_Times_Valid", "\"EndTime\" > \"StartTime\"");
+                table.HasCheckConstraint("CK_Course_Price_Positive", "\"Price\" > 0");
+            });
             b.HasKey(c => c.Id);
 
             b.Property(c => c.Title).HasMaxLength(200).IsRequired();
@@ -22,11 +29,6 @@ namespace BioGamaEcuador.Data.Configurations
             b.Property(c => c.ImageUrl).HasMaxLength(500);
             b.Property(c => c.TargetAudience).HasMaxLength(300);
 
-            b.HasCheckConstraint("CK_Course_TotalSeats_Positive", "\"TotalSeats\" > 0");
-            b.HasCheckConstraint("CK_Course_Seats_Consistent", "\"ReservedSeats\" >= 0 AND \"ConfirmedSeats\" >= 0 AND (\"ReservedSeats\" + \"ConfirmedSeats\") <= \"TotalSeats\"");
-            b.HasCheckConstraint("CK_Course_Dates_Valid", "\"EndDate\" >= \"StartDate\"");
-            b.HasCheckConstraint("CK_Course_Times_Valid", "\"EndTime\" > \"StartTime\"");
-            b.HasCheckConstraint("CK_Course_Price_Positive", "\"Price\" > 0");
 
             b.HasIndex(c => c.IsActive);
             b.HasIndex(c => c.StartDate);
@@ -86,7 +88,13 @@ namespace BioGamaEcuador.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<PhysicalProduct> b)
         {
-            b.ToTable("PhysicalProducts");
+            b.ToTable("PhysicalProducts", table =>
+            {
+                table.HasCheckConstraint("CK_PhysicalProduct_Stock_NonNegative", "\"Stock\" >= 0");
+                table.HasCheckConstraint("CK_PhysicalProduct_ReservedStock_NonNegative", "\"ReservedStock\" >= 0");
+                table.HasCheckConstraint("CK_PhysicalProduct_Price_Positive", "\"Price\" > 0");
+                table.HasCheckConstraint("CK_PhysicalProduct_Stock_Consistent", "\"ReservedStock\" <= \"Stock\"");
+            });
             b.HasKey(p => p.Id);
 
             b.Property(p => p.Name).HasMaxLength(200).IsRequired();
@@ -95,10 +103,6 @@ namespace BioGamaEcuador.Data.Configurations
             b.Property(p => p.SKU).HasMaxLength(50);
             b.Property(p => p.ImageUrl).HasMaxLength(500);
 
-            b.HasCheckConstraint("CK_PhysicalProduct_Stock_NonNegative", "\"Stock\" >= 0");
-            b.HasCheckConstraint("CK_PhysicalProduct_ReservedStock_NonNegative", "\"ReservedStock\" >= 0");
-            b.HasCheckConstraint("CK_PhysicalProduct_Price_Positive", "\"Price\" > 0");
-            b.HasCheckConstraint("CK_PhysicalProduct_Stock_Consistent", "\"ReservedStock\" <= \"Stock\"");
 
             b.HasIndex(p => p.IsActive);
             b.HasIndex(p => p.SKU).IsUnique().HasFilter("\"SKU\" IS NOT NULL AND \"SKU\" <> ''");
@@ -221,7 +225,10 @@ namespace BioGamaEcuador.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<InventoryMovement> b)
         {
-            b.ToTable("InventoryMovements");
+            b.ToTable("InventoryMovements", table =>
+            {
+                table.HasCheckConstraint("CK_InventoryMovement_Cantidad_Positive", "\"Cantidad\" > 0");
+            });
             b.HasKey(m => m.Id);
 
             b.Property(m => m.TipoMovimiento).HasMaxLength(30).IsRequired();
@@ -229,7 +236,6 @@ namespace BioGamaEcuador.Data.Configurations
             b.Property(m => m.UsuarioId).HasMaxLength(450).IsRequired();
             b.Property(m => m.Observacion).HasMaxLength(1000);
 
-            b.HasCheckConstraint("CK_InventoryMovement_Cantidad_Positive", "\"Cantidad\" > 0");
 
             b.HasIndex(m => m.PhysicalProductId);
             b.HasIndex(m => m.CourseId);

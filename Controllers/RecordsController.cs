@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using BioGamaEcuador.Data;
 using BioGamaEcuador.Models;
 using BioGamaEcuador.Services;
+using BioGamaEcuador.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace BioGamaEcuador.Controllers
 {
@@ -13,11 +15,16 @@ namespace BioGamaEcuador.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IAuditService _audit;
+        private readonly IHubContext<ActivityHub> _activity;
+        private readonly ILogger<RecordsController> _logger;
 
-        public RecordsController(AppDbContext context, IAuditService audit)
+        public RecordsController(AppDbContext context, IAuditService audit,
+            IHubContext<ActivityHub> activity, ILogger<RecordsController> logger)
         {
             _context = context;
             _audit = audit;
+            _activity = activity;
+            _logger = logger;
         }
 
         private async Task<Researcher?> GetCurrentResearcherAsync()
@@ -130,7 +137,7 @@ namespace BioGamaEcuador.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrador,Investigador")]
-        public async Task<IActionResult> Create(Record entry)
+        public async Task<IActionResult> Create([Bind("SpeciesId,LocationId,ResearcherId,DiscoveryDate,ObservedQuantity,Observations,IsActive")] Record entry)
         {
             var isInvestigator = User.IsInRole("Investigador") && !User.IsInRole("Administrador");
             Researcher? currentResearcher = null;
@@ -148,6 +155,21 @@ namespace BioGamaEcuador.Controllers
                 entry.CreatedAt = DateTime.UtcNow;
                 _context.Add(entry);
                 await _context.SaveChangesAsync();
+                try
+                {
+                    await _activity.Clients.All.SendAsync("Activity", new
+                    {
+                        id = Guid.NewGuid().ToString("N"),
+                        type = "Registro creado",
+                        message = "Se ha creado un registro de biodiversidad.",
+                        pod = Environment.GetEnvironmentVariable("HOSTNAME") ?? Environment.MachineName,
+                        timestamp = DateTime.UtcNow
+                    });
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Registro {RecordId} guardado; no se pudo emitir la notificacion", entry.Id);
+                }
                 return RedirectToAction(nameof(Index));
             }
 

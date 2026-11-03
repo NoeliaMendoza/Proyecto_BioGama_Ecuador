@@ -1,10 +1,11 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BioGamaEcuador.Models
 {
     public class NaturalReserve
     {
-        public int Id { get; set; }
+        [BindRequired] public int Id { get; set; }
 
         [Required(ErrorMessage = "El nombre de la reserva es obligatorio.")]
         [StringLength(150, ErrorMessage = "El nombre debe tener máximo {1} caracteres.")]
@@ -17,7 +18,7 @@ namespace BioGamaEcuador.Models
         [Range(0.01, 9999999, ErrorMessage = "La superficie debe estar entre {1} y {2} hectáreas.")]
         public decimal SurfaceHectares { get; set; }
 
-        public int YearCreated { get; set; }
+        [BindRequired, Range(1900, 2100)] public int YearCreated { get; set; }
 
         [StringLength(500, ErrorMessage = "La descripción debe tener máximo {1} caracteres.")]
         public string Description { get; set; } = string.Empty;

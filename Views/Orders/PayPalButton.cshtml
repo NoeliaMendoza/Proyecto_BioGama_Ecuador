@@ -52,10 +52,14 @@
     </div>
 </div>
 
+<div id="paypal-antiforgery" hidden>
+    @Html.AntiForgeryToken()
+</div>
+
 @section Scripts {
     <script src="https://www.paypal.com/sdk/js?client-id=@clientId&currency=USD"></script>
     <script>
-        const antiForgeryToken = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+        const antiForgeryToken = document.querySelector('#paypal-antiforgery input[name="__RequestVerificationToken"]').value;
 
         paypal.Buttons({
             createOrder: function () {
@@ -87,8 +91,9 @@
                     if (details.success && details.redirect) {
                         window.location.href = details.redirect;
                     } else {
-                        document.getElementById('paypal-message').innerHTML =
-                            '<div class="alert alert-danger">' + (details.message || 'Error al procesar el pago') + '</div>';
+                        const message = document.getElementById('paypal-message');
+                        message.className = 'alert alert-danger mt-3';
+                        message.textContent = details.message || 'Error al procesar el pago';
                     }
                 });
             },

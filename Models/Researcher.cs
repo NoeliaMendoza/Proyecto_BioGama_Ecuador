@@ -1,10 +1,11 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BioGamaEcuador.Models
 {
     public class Researcher
     {
-        public int Id { get; set; }
+        [BindRequired] public int Id { get; set; }
 
         [Required(ErrorMessage = "El nombre es obligatorio.")]
         [StringLength(100, ErrorMessage = "El nombre debe tener máximo {1} caracteres.")]

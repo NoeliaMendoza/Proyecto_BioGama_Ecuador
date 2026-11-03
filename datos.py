@@ -10,16 +10,22 @@ Requiere: pip install faker psycopg2-binary
 import psycopg2
 from faker import Faker
 import random
+import os
 from datetime import datetime, timezone
 
 # ─── CONFIGURACIÓN ────────────────────────────────────────────────
-DB_CONFIG = {
-    "host": "localhost",
-    "port": 5432,
-    "database": "biogama_ecuador",
-    "user": "biogama_user",
-    "password": "BioGama$2026#Ec"
-}
+def load_db_config():
+    """Lee credenciales al conectar; nunca usa una clave predeterminada."""
+    db_password = os.environ.get("PGPASSWORD")
+    if not db_password:
+        raise RuntimeError("Configura PGPASSWORD antes de generar datos.")
+    return {
+        "host": os.environ.get("PGHOST", "localhost"),
+        "port": int(os.environ.get("PGPORT", "5432")),
+        "database": os.environ.get("PGDATABASE", "biogama_ecuador"),
+        "user": os.environ.get("PGUSER", "biogama_user"),
+        "password": db_password,
+    }
 
 BATCH_SIZE = 1000
 N_FAMILIES    = 500
@@ -361,7 +367,7 @@ def nombre_ecuatoriano():
     return f"{random.choice(NOMBRES)} {random.choice(APELLIDOS)} {random.choice(APELLIDOS)}"
 
 def get_connection():
-    return psycopg2.connect(**DB_CONFIG)
+    return psycopg2.connect(**load_db_config())
 
 def insert_batch(cur, sql, batch):
     cur.executemany(sql, batch)
