@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <!-- Alternativa Coverlet/OpenCover para entornos que permiten instrumentacion.
+       En el laboratorio Windows se uso cobertura dinamica: coverage.dynamic.xml. -->
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat Code Coverage">
+        <Configuration>
+          <Format>opencover</Format>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>
