@@ -32,13 +32,13 @@
         <form method="get" asp-action="Index">
             <div class="row g-2 align-items-end">
                 <div class="col-12 col-md-2">
-                    <label class="form-label">Buscar</label>
-                    <input type="text" name="busqueda" class="form-control"
+                    <label class="form-label" for="filter-busqueda">Buscar</label>
+                    <input id="filter-busqueda" type="text" name="busqueda" class="form-control"
                            placeholder="Nombre común o científico…" value="@ViewBag.Busqueda" />
                 </div>
                 <div class="col-6 col-md-2">
-                    <label class="form-label">Familia</label>
-                    <select name="familia" class="form-select">
+                    <label class="form-label" for="filter-familia">Familia</label>
+                    <select id="filter-familia" name="familia" class="form-select">
                         <option value="">Todas</option>
                         @foreach (var f in (List<string>?)ViewBag.Familias ?? new List<string>())
                         {
@@ -47,8 +47,8 @@
                     </select>
                 </div>
                 <div class="col-6 col-md-2">
-                    <label class="form-label">Reino</label>
-                    <select name="kingdom" class="form-select">
+                    <label class="form-label" for="filter-kingdom">Reino</label>
+                    <select id="filter-kingdom" name="kingdom" class="form-select">
                         <option value="">Todos</option>
                         @foreach (var k in (List<string>?)ViewBag.Kingdoms ?? new List<string>())
                         {
@@ -57,8 +57,8 @@
                     </select>
                 </div>
                 <div class="col-6 col-md-2">
-                    <label class="form-label">Estado</label>
-                    <select name="estado" class="form-select">
+                    <label class="form-label" for="filter-estado">Estado</label>
+                    <select id="filter-estado" name="estado" class="form-select">
                         <option value="">Todos</option>
                         @foreach (var e in (List<string>?)ViewBag.Estados ?? new List<string>())
                         {
@@ -67,8 +67,8 @@
                     </select>
                 </div>
                 <div class="col-6 col-md-2">
-                    <label class="form-label">Endémica</label>
-                    <select name="endemica" class="form-select">
+                    <label class="form-label" for="filter-endemica">Endémica</label>
+                    <select id="filter-endemica" name="endemica" class="form-select">
                         <option value="">Todas</option>
                         <option value="true" selected="@(ViewBag.EndémicaFiltro == true)">Sí</option>
                         <option value="false" selected="@(ViewBag.EndémicaFiltro == false)">No</option>

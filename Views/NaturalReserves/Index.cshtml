@@ -25,11 +25,13 @@
             <form method="get" asp-action="Index">
                 <div class="row g-2 align-items-center">
                     <div class="col-12 col-md-5">
-                        <input type="text" name="busqueda" class="form-control" placeholder="Buscar por nombre…"
+                        <label class="visually-hidden" for="filter-busqueda">Buscar</label>
+                        <input id="filter-busqueda" type="text" name="busqueda" class="form-control" placeholder="Buscar por nombre…"
                                value="@ViewBag.Busqueda" />
                     </div>
                     <div class="col-12 col-md-4">
-                        <select name="region" class="form-select">
+                        <label class="visually-hidden" for="filter-region">Región</label>
+                        <select id="filter-region" name="region" class="form-select">
                             <option value="">Todas las regiones</option>
                             @foreach (var r in (List<string>?)ViewBag.Regiones ?? new List<string>())
                             {

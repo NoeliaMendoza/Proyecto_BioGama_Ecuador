@@ -28,23 +28,23 @@
             <div class="text-start mx-auto" style="max-width:400px;">
                 <table class="table table-borderless mb-0 app-table">
                     <tr>
-                        <td class="text-muted ps-0">Especie</td>
+                        <th scope="row" class="text-muted ps-0">Especie</th>
                         <td class="pe-0 fw-medium">@Model.Species?.CommonName</td>
                     </tr>
                     <tr>
-                        <td class="text-muted ps-0">Ubicación</td>
+                        <th scope="row" class="text-muted ps-0">Ubicación</th>
                         <td class="pe-0 fw-medium">@Model.Location?.PlaceName</td>
                     </tr>
                     <tr>
-                        <td class="text-muted ps-0">Investigador</td>
+                        <th scope="row" class="text-muted ps-0">Investigador</th>
                         <td class="pe-0 fw-medium">@Model.Researcher?.Name</td>
                     </tr>
                     <tr>
-                        <td class="text-muted ps-0">Fecha de descubrimiento</td>
+                        <th scope="row" class="text-muted ps-0">Fecha de descubrimiento</th>
                         <td class="pe-0 fw-medium">@Model.DiscoveryDate.ToString("dd/MM/yyyy")</td>
                     </tr>
                     <tr>
-                        <td class="text-muted ps-0">Cantidad observada</td>
+                        <th scope="row" class="text-muted ps-0">Cantidad observada</th>
                         <td class="pe-0 fw-medium">@Model.ObservedQuantity</td>
                     </tr>
                 </table>

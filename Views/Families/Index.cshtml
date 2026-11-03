@@ -24,12 +24,12 @@
         <form method="get" asp-action="Index">
             <div class="row g-2 align-items-end">
                 <div class="col-12 col-md-4">
-                    <label class="form-label">Buscar</label>
-                    <input type="text" name="busqueda" class="form-control" placeholder="Nombre de la familia..." value="@ViewBag.Busqueda" />
+                    <label class="form-label" for="filter-busqueda">Buscar</label>
+                    <input id="filter-busqueda" type="text" name="busqueda" class="form-control" placeholder="Nombre de la familia..." value="@ViewBag.Busqueda" />
                 </div>
                 <div class="col-6 col-md-3">
-                    <label class="form-label">Reino</label>
-                    <select name="reino" class="form-select">
+                    <label class="form-label" for="filter-reino">Reino</label>
+                    <select id="filter-reino" name="reino" class="form-select">
                         <option value="">Todos los reinos</option>
                         @foreach (var k in (List<string>?)ViewBag.Kingdoms ?? new List<string>())
                         {
