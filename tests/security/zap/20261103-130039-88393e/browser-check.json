@@ -1,0 +1,19 @@
+{
+  "time": "2026-11-03T18:00:20.739Z",
+  "browser": "Isolated Chrome headless",
+  "results": [
+    {
+      "path": "/Products",
+      "violations": [],
+      "stock": "Disponibilidad en vivo. Actualizada a las 1:00:19 p.m.",
+      "inlineHandlers": 0
+    },
+    {
+      "path": "/Ia",
+      "violations": [],
+      "inlineHandlers": 0,
+      "aiButton": "PASS; handler substituted to avoid calling AI service",
+      "selection": "PASS; browser-only synthetic species, no database write"
+    }
+  ]
+}

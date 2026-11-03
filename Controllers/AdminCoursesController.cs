@@ -32,7 +32,7 @@ public sealed class AdminCoursesController(AppDbContext context, IAuditService a
 
     [HttpGet("Create")] public async Task<IActionResult> Create() { await SpeciesAsync(); return View(new CourseFormViewModel()); }
     [HttpPost("Create"), ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(CourseFormViewModel model)
+    public async Task<IActionResult> Create([Bind("Title,Description,Syllabus,Price,TotalSeats,StartDate,EndDate,StartTime,EndTime,Modality,Venue,Instructor,InstructorBio,ImageUrl,IsActive,RequiresPriorKnowledge,TargetAudience,SpeciesId")] CourseFormViewModel model)
     {
         ValidateDates(model); if (!ModelState.IsValid) { await SpeciesAsync(); return View(model); }
         var course = new Course(); Apply(model, course); context.Courses.Add(course); await context.SaveChangesAsync();

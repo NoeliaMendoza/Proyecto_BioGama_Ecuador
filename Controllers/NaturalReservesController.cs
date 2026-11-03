@@ -89,7 +89,7 @@ namespace BioGamaEcuador.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrador,Investigador")]
-        public async Task<IActionResult> Create([Bind("Id,Name,Region,SurfaceHectares,YearCreated,Description,IsActive,CreatedAt")] NaturalReserve naturalReserve)
+        public async Task<IActionResult> Create([Bind("Name,Region,SurfaceHectares,YearCreated,Description,IsActive,CreatedAt")] NaturalReserve naturalReserve)
         {
             if (ModelState.IsValid)
             {

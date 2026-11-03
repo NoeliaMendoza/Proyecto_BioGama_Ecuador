@@ -25,11 +25,13 @@
             <form method="get" asp-action="Index">
                 <div class="row g-2 align-items-center">
                     <div class="col-12 col-md-5">
-                        <input type="text" name="busqueda" class="form-control" placeholder="Buscar por lugar…"
+                        <label class="visually-hidden" for="filter-busqueda">Buscar</label>
+                        <input id="filter-busqueda" type="text" name="busqueda" class="form-control" placeholder="Buscar por lugar…"
                                value="@ViewBag.Busqueda" />
                     </div>
                     <div class="col-12 col-md-4">
-                        <select name="reserva" class="form-select">
+                        <label class="visually-hidden" for="filter-reserva">Reserva natural</label>
+                        <select id="filter-reserva" name="reserva" class="form-select">
                             <option value="">Todas las reservas</option>
                             @foreach (var r in (IEnumerable<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>?)ViewBag.Reservas
                             ?? Enumerable.Empty<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>())

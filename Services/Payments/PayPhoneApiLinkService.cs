@@ -1,5 +1,6 @@
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Options;
 using BioGamaEcuador.Settings;
 
@@ -69,4 +70,26 @@ public class PayPhoneApiLinkService
 
         return content.Trim('"');
     }
+
+    public async Task<VerifiedPayPhoneTransaction> GetTransactionAsync(string clientTransactionId,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(_settings.Token))
+            throw new InvalidOperationException("La verificacion de PayPhone no esta configurada.");
+        using var request = new HttpRequestMessage(HttpMethod.Get,
+            "https://pay.payphonetodoesposible.com/api/Sale/client/" + Uri.EscapeDataString(clientTransactionId));
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settings.Token);
+        using var response = await _httpClient.SendAsync(request, cancellationToken);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<VerifiedPayPhoneTransaction>(cancellationToken)
+            ?? throw new InvalidOperationException("PayPhone no devolvio una transaccion verificable.");
+    }
+}
+
+public sealed class VerifiedPayPhoneTransaction
+{
+    [JsonRequired] public string ClientTransactionId { get; set; } = string.Empty;
+    [JsonRequired] public int StatusCode { get; set; }
+    [JsonRequired] public decimal Amount { get; set; }
+    [JsonRequired] public string Currency { get; set; } = string.Empty;
 }

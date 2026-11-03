@@ -114,7 +114,7 @@ namespace BioGamaEcuador.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrador,Investigador")]
-        public async Task<IActionResult> Create([Bind("Id,CommonName,ScientificName,ConservationStatusId,Description,ImageUrl,IsEndemic,FamilyId,IsActive,CreatedAt")] Species species)
+        public async Task<IActionResult> Create([Bind("CommonName,ScientificName,ConservationStatusId,Description,ImageUrl,IsEndemic,FamilyId,IsActive,CreatedAt")] Species species)
         {
             if (species.FamilyId <= 0)
             {

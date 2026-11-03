@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: iperf-server
+  namespace: biogama
+  labels:
+    app: iperf-server
+spec:
+  automountServiceAccountToken: false
+  containers:
+    - name: iperf
+      image: nicolaka/netshoot:v0.14
+      command: ["iperf3", "-s"]
+      ports:
+        - containerPort: 5201
+          protocol: TCP
+        - containerPort: 5201
+          protocol: UDP
+      readinessProbe:
+        tcpSocket:
+          port: 5201
+        periodSeconds: 3
+      resources:
+        requests:
+          cpu: 50m
+          memory: 32Mi
+        limits:
+          cpu: "1"
+          memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: iperf-server
+  namespace: biogama
+spec:
+  selector:
+    app: iperf-server
+  ports:
+    - name: tcp
+      port: 5201
+      protocol: TCP
+    - name: udp
+      port: 5201
+      protocol: UDP
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: network-client
+  namespace: biogama
+  labels:
+    app: network-client
+spec:
+  automountServiceAccountToken: false
+  containers:
+    - name: tools
+      image: nicolaka/netshoot:v0.14
+      command: ["sleep", "infinity"]
+      securityContext:
+        capabilities:
+          add: ["NET_ADMIN"]
+      resources:
+        requests:
+          cpu: 50m
+          memory: 32Mi
+        limits:
+          cpu: "1"
+          memory: 128Mi

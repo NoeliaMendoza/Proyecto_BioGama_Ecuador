@@ -1,0 +1,18 @@
+{
+    "red":  "container:11a502e56035",
+    "alcance":  "Baseline anonimo: spider tradicional y reglas pasivas, sin envio de formularios ni escaneo activo.",
+    "limitaciones":  "Evalua la imagen desplegada, no automaticamente los cambios locales; no cubre sesiones autenticadas, logica de pagos ni garantiza ausencia de vulnerabilidades.",
+    "imagenAplicacion":  "biogama-web:k8s-v7",
+    "imagenHerramienta":  "sha256:9624669db72f54d86c4b46a7064518bd9bf79d8c61a4c31befa9923489f328af",
+    "objetivo":  "http://127.0.0.1:8080",
+    "herramienta":  "ghcr.io/zaproxy/zaproxy:stable",
+    "codigoSalida":  2,
+    "informacionAplicacion":  {
+                                  "application":  "BioGamaEcuador",
+                                  "version":  "k8s-v7",
+                                  "pod":  "biogama-web-7448869cfd-wrjcn",
+                                  "timestamp":  "2026-11-03T17:36:25.2555049Z"
+                              },
+    "fechaEcuador":  "2026-11-03T12:36:26.0884017-05:00",
+    "comprobacionCatalogo":  "200|text/html; charset=utf-8"
+}

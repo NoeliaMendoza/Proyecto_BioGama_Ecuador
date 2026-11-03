@@ -135,7 +135,7 @@
         <a asp-controller="Courses" asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-mortarboard me-1"></i>Seguir comprando</a>
         @if (status == "Approved")
         {
-            <button class="btn btn-outline-primary" onclick="window.print()"><i class="bi bi-printer me-1"></i>Imprimir comprobante</button>
+            <button class="btn btn-outline-primary" data-print><i class="bi bi-printer me-1"></i>Imprimir comprobante</button>
         }
     </div>
 </div>

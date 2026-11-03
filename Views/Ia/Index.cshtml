@@ -12,10 +12,10 @@
 }
 
 <link rel="stylesheet" href="~/css/ia.css" asp-append-version="true" />
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="~/lib/marked/marked.umd.js"></script>
+<script src="~/lib/dompurify/purify.min.js"></script>
+<script src="~/js/markdown-renderer.js" asp-append-version="true"></script>
+<link href="~/lib/plus-jakarta-sans/font.css" rel="stylesheet">
 
 <div class="container py-4 ia-page">
 
@@ -70,11 +70,11 @@
                             <div class="mb-2">
                                 <label class="form-label small fw-bold text-secondary">Acción:</label>
                                 <div class="d-grid gap-2">
-                                    <button type="button" class="ia-btn-action d-flex align-items-center justify-content-between" onclick="generarAnalisis('ficha')">
+                                    <button type="button" class="ia-btn-action d-flex align-items-center justify-content-between" data-analysis-type="ficha">
                                         <span><i class="fa-solid fa-file-medical me-2" style="color: #16a34a;"></i> Ficha Ecológica</span>
                                         <i class="fa-solid fa-chevron-right small text-muted"></i>
                                     </button>
-                                    <button type="button" class="ia-btn-action d-flex align-items-center justify-content-between" onclick="generarAnalisis('conservacion')">
+                                    <button type="button" class="ia-btn-action d-flex align-items-center justify-content-between" data-analysis-type="conservacion">
                                         <span><i class="fa-solid fa-shield-halved me-2" style="color: #d97706;"></i> Plan de Conservación</span>
                                         <i class="fa-solid fa-chevron-right small text-muted"></i>
                                     </button>
@@ -89,7 +89,7 @@
                                 <small id="promptError" class="text-danger d-none mt-1"><i class="fa-solid fa-circle-exclamation me-1"></i>Ingrese un texto de consulta.</small>
                             </div>
                             <div class="d-grid">
-                                <button type="button" class="ia-btn-primary" onclick="generarAnalisis('libre')">
+                                <button type="button" class="ia-btn-primary" data-analysis-type="libre">
                                     <i class="fa-solid fa-paper-plane me-2"></i>Enviar Consulta
                                 </button>
                             </div>
@@ -111,7 +111,7 @@
                         </div>
                         <h6>Respuesta Generada</h6>
                     </div>
-                    <button id="btnCopy" class="btn btn-sm btn-outline-secondary d-none" onclick="copiarRespuesta()">
+                    <button id="btnCopy" class="btn btn-sm btn-outline-secondary d-none" data-copy-response>
                         <i class="fa-solid fa-copy me-1" id="iconCopy"></i> <span id="textCopy">Copiar</span>
                     </button>
                 </div>
@@ -187,12 +187,19 @@
             }
 
             speciesDropdown.innerHTML = filtered.map((s, i) =>
-                `<div class="ia-autocomplete-item" data-id="${s.id}" data-name="${s.name}" onclick="selectSpecies(${s.id}, '${s.name.replace(/'/g, "\\'")}')">` +
+                `<div class="ia-autocomplete-item" data-species-id="${s.id}">` +
                 `<strong>${highlightMatch(s.name, query)}</strong> <span class="accent">${highlightMatch(s.scientific, query)}</span>` +
-                (s.code ? ` <span class="badge bg-light text-secondary ms-1">${s.code}</span>` : '') +
+                (s.code ? ` <span class="badge bg-light text-secondary ms-1">${escapeText(s.code)}</span>` : '') +
                 `</div>`
             ).join('');
             speciesDropdown.classList.remove('d-none');
+        });
+
+        speciesDropdown.addEventListener('click', function (event) {
+            const item = event.target.closest('[data-species-id]');
+            if (!item) return;
+            const species = speciesList.find(s => String(s.id) === item.dataset.speciesId);
+            if (species) selectSpecies(species.id, species.name);
         });
 
         speciesInput.addEventListener('blur', function () {
@@ -210,12 +217,18 @@
             document.getElementById('promptError').classList.add('d-none');
         });
 
+        function escapeText(text) {
+            const span = document.createElement('span');
+            span.textContent = text;
+            return span.innerHTML;
+        }
+
         function highlightMatch(text, query) {
             const idx = text.toLowerCase().indexOf(query);
-            if (idx === -1) return text;
-            return text.slice(0, idx) + '<strong style="color:#16a34a">' +
-                   text.slice(idx, idx + query.length) + '</strong>' +
-                   text.slice(idx + query.length);
+            if (idx === -1) return escapeText(text);
+            return escapeText(text.slice(0, idx)) + '<strong class="text-success">' +
+                   escapeText(text.slice(idx, idx + query.length)) + '</strong>' +
+                   escapeText(text.slice(idx + query.length));
         }
 
         function selectSpecies(id, name) {
@@ -278,7 +291,7 @@
                 stateLoading.classList.add('d-none');
 
                 if (response.ok && data.success) {
-                    const htmlFormatted = marked.parse(data.respuesta || '');
+                    const htmlFormatted = window.BioGamaMarkdown.render(data.respuesta);
                     aiMarkdownContent.innerHTML = htmlFormatted;
                     stateSuccess.classList.remove('d-none');
                     btnCopy.classList.remove('d-none');

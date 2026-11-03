@@ -70,13 +70,15 @@
                         <input type="hidden" name="orderId" value="@Model.Id" />
 
                         <div class="mb-4">
-                            <label class="form-label fw-medium">Informacion de contacto</label>
+                            <h6 class="form-label fw-medium">Informacion de contacto</h6>
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <input type="email" name="Email" class="form-control" required value="@User.Identity?.Name" placeholder="Correo electronico *" />
+                                    <label for="checkout-email" class="form-label">Correo electronico</label>
+                                    <input id="checkout-email" type="email" name="Email" class="form-control" required value="@User.Identity?.Name" placeholder="Correo electronico *" />
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="tel" name="Phone" class="form-control" placeholder="Teléfono * +593 9XXXXXXXX" required pattern="^(\+593|00593|0)?\d{8,9}$" title="Ingresa un número válido de Ecuador: +593 9XXXXXXXX o 09XXXXXXXX" />
+                                    <label for="checkout-phone" class="form-label">Telefono</label>
+                                    <input id="checkout-phone" type="tel" name="Phone" class="form-control" placeholder="Teléfono * +593 9XXXXXXXX" required pattern="^(\+593|00593|0)?\d{8,9}$" title="Ingresa un número válido de Ecuador: +593 9XXXXXXXX o 09XXXXXXXX" />
                                 </div>
                             </div>
                         </div>
@@ -84,16 +86,19 @@
                         @if (Model.Details.Any(d => d.PhysicalProduct != null))
                         {
                             <div class="mb-4">
-                                <label class="form-label fw-medium">Direccion de envio</label>
+                                <h6 class="form-label fw-medium">Direccion de envio</h6>
                                 <div class="row g-3">
                                     <div class="col-12">
-                                        <input type="text" name="ShippingAddress" class="form-control" placeholder="Direccion completa *" required />
+                                        <label for="checkout-address" class="form-label">Direccion completa</label>
+                                    <input id="checkout-address" type="text" name="ShippingAddress" class="form-control" placeholder="Direccion completa *" required />
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" name="City" class="form-control" placeholder="Ciudad *" required />
+                                        <label for="checkout-city" class="form-label">Ciudad</label>
+                                    <input id="checkout-city" type="text" name="City" class="form-control" placeholder="Ciudad *" required />
                                     </div>
                                     <div class="col-md-4">
-                                        <select name="Province" class="form-select" required>
+                                        <label for="checkout-province" class="form-label">Provincia</label>
+                                        <select id="checkout-province" name="Province" class="form-select" required>
                                             <option value="">Provincia *</option>
                                             <option>Pichincha</option>
                                             <option>Guayas</option>
@@ -103,14 +108,15 @@
                                         </select>
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" name="PostalCode" class="form-control" placeholder="Codigo postal" />
+                                        <label for="checkout-postal" class="form-label">Codigo postal</label>
+                                    <input id="checkout-postal" type="text" name="PostalCode" class="form-control" placeholder="Codigo postal" />
                                     </div>
                                 </div>
                             </div>
                         }
 
                         <div>
-                            <label class="form-label fw-medium mb-3">Metodo de pago</label>
+                            <h6 class="form-label fw-medium mb-3">Metodo de pago</h6>
                             <div class="payment-options">
                                 <label class="payment-card" for="paypal">
                                     <input type="radio" name="PaymentProvider" id="paypal" value="PayPal" checked required>

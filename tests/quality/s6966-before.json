@@ -1,0 +1,70 @@
+﻿[
+    {
+        "ruleId":  "S6966",
+        "message":  "Await RunAsync instead.",
+        "locations":  [
+                          {
+                              "resultFile":  {
+                                                 "uri":  "file:///C:/Users/nkmj2/Desktop/32820-APLICACIONES%20DISTRIBUIDAS/Proyecto_BioGama_Ecuador/Program.cs",
+                                                 "region":  {
+                                                                "startLine":  203,
+                                                                "startColumn":  5,
+                                                                "endLine":  203,
+                                                                "endColumn":  14
+                                                            }
+                                             }
+                          }
+                      ]
+    },
+    {
+        "ruleId":  "S6966",
+        "message":  "Await RunAsync instead.",
+        "locations":  [
+                          {
+                              "resultFile":  {
+                                                 "uri":  "file:///C:/Users/nkmj2/Desktop/32820-APLICACIONES%20DISTRIBUIDAS/Proyecto_BioGama_Ecuador/Program.cs",
+                                                 "region":  {
+                                                                "startLine":  208,
+                                                                "startColumn":  5,
+                                                                "endLine":  208,
+                                                                "endColumn":  14
+                                                            }
+                                             }
+                          }
+                      ]
+    },
+    {
+        "ruleId":  "S6966",
+        "message":  "Await RenderSectionAsync instead.",
+        "locations":  [
+                          {
+                              "resultFile":  {
+                                                 "uri":  "file:///C:/Users/nkmj2/Desktop/32820-APLICACIONES%20DISTRIBUIDAS/Proyecto_BioGama_Ecuador/Areas/Identity/Pages/Account/Manage/_Layout.cshtml",
+                                                 "region":  {
+                                                                "startLine":  44,
+                                                                "startColumn":  6,
+                                                                "endLine":  44,
+                                                                "endColumn":  47
+                                                            }
+                                             }
+                          }
+                      ]
+    },
+    {
+        "ruleId":  "S6966",
+        "message":  "Await AnyAsync instead.",
+        "locations":  [
+                          {
+                              "resultFile":  {
+                                                 "uri":  "file:///C:/Users/nkmj2/Desktop/32820-APLICACIONES%20DISTRIBUIDAS/Proyecto_BioGama_Ecuador/Controllers/FamiliesController.cs",
+                                                 "region":  {
+                                                                "startLine":  128,
+                                                                "startColumn":  26,
+                                                                "endLine":  128,
+                                                                "endColumn":  71
+                                                            }
+                                             }
+                          }
+                      ]
+    }
+]

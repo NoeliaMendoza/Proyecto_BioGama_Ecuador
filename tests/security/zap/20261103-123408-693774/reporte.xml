@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<OWASPZAPReport programName="ZAP" version="2.17.0" generated="Tue, 3 Nov 2026 17:34:39" created="2026-11-03T17:34:39.775891921Z">
+	
+		<site name="http://host.docker.internal:30080" host="host.docker.internal" port="30080" ssl="false">
+			<alerts>
+				
+			</alerts>
+		</site>
+	
+	
+		<insights>
+			
+				<insight>
+					<level>Info</level>
+					<reason>Informational</reason>
+					<site></site>
+					<key>insight.network.failure</key>
+					<description>Percentage of network failures</description>
+					<statistic>41</statistic>
+				</insight>
+			
+			
+				<insight>
+					<level>Info</level>
+					<reason>Informational</reason>
+					<site>http://host.docker.internal:30080</site>
+					<key>insight.endpoint.ctype.text/plain</key>
+					<description>Percentage of endpoints with content type text/plain</description>
+					<statistic>100</statistic>
+				</insight>
+			
+			
+				<insight>
+					<level>Info</level>
+					<reason>Informational</reason>
+					<site>http://host.docker.internal:30080</site>
+					<key>insight.endpoint.method.GET</key>
+					<description>Percentage of endpoints with method GET</description>
+					<statistic>100</statistic>
+				</insight>
+			
+			
+				<insight>
+					<level>Info</level>
+					<reason>Informational</reason>
+					<site>http://host.docker.internal:30080</site>
+					<key>insight.endpoint.total</key>
+					<description>Count of total endpoints</description>
+					<statistic>1</statistic>
+				</insight>
+			
+		</insights>
+	
+	
+	
+</OWASPZAPReport>

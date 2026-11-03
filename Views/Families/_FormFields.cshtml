@@ -1,0 +1,28 @@
+@model BioGamaEcuador.Models.Family
+
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        <input asp-for="Name" class="form-control" placeholder="Nombre de la familia" />
+                        <label asp-for="Name"><i class="bi bi-tag me-1"></i>Nombre</label>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        <select asp-for="Kingdom" class="form-select" id="Kingdom">
+                            <option value="">-- Seleccione un reino --</option>
+                            <option value="Animal">Animal</option>
+                            <option value="Vegetal">Vegetal</option>
+                            <option value="Fungi">Fungi</option>
+                        </select>
+                        <label asp-for="Kingdom"><i class="bi bi-globe me-1"></i>Reino</label>
+                        <span asp-validation-for="Kingdom" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-check mb-4">
+                <input asp-for="IsActive" class="form-check-input" checked="@Model.IsActive" />
+                <label asp-for="IsActive" class="form-check-label">Activo</label>
+            </div>

@@ -168,7 +168,7 @@ else
                                        class="btn-action view" title="Ver detalle" data-bs-toggle="tooltip">
                                         <i class="bi bi-eye"></i>
                                     </a>
-                                    @if (o.Status == "Confirmed" && o.Details.Any(d => d.Course != null))
+                                    @if (o.Status == "Confirmed" && o.Details?.Any(d => d.Course != null) == true)
                                     {
                                         <a asp-controller="MyCourses" asp-action="Index"
                                            class="btn-action primary" title="Ir al curso" data-bs-toggle="tooltip">

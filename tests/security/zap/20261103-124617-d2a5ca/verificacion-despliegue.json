@@ -1,0 +1,67 @@
+[
+    {
+        "ruta":  "/Products",
+        "estado":  200,
+        "tipo":  "text/html; charset=utf-8",
+        "nosniff":  "nosniff",
+        "marcos":  "SAMEORIGIN"
+    },
+    {
+        "ruta":  "/Ia",
+        "estado":  200,
+        "tipo":  "text/html; charset=utf-8",
+        "nosniff":  "nosniff",
+        "marcos":  "SAMEORIGIN"
+    },
+    {
+        "ruta":  "/lib/chartjs/chart.umd.js",
+        "estado":  200,
+        "tipo":  "text/javascript",
+        "nosniff":  "nosniff",
+        "marcos":  "SAMEORIGIN"
+    },
+    {
+        "ruta":  "/lib/marked/marked.umd.js",
+        "estado":  200,
+        "tipo":  "text/javascript",
+        "nosniff":  "nosniff",
+        "marcos":  "SAMEORIGIN"
+    },
+    {
+        "ruta":  "/lib/dompurify/purify.min.js",
+        "estado":  200,
+        "tipo":  "text/javascript",
+        "nosniff":  "nosniff",
+        "marcos":  "SAMEORIGIN"
+    },
+    {
+        "ruta":  "/lib/bootstrap-icons/font/bootstrap-icons.min.css",
+        "estado":  200,
+        "tipo":  "text/css",
+        "nosniff":  "nosniff",
+        "marcos":  "SAMEORIGIN"
+    },
+    {
+        "ruta":  "/lib/plus-jakarta-sans/font.css",
+        "estado":  200,
+        "tipo":  "text/css",
+        "nosniff":  "nosniff",
+        "marcos":  "SAMEORIGIN"
+    },
+    {
+        "ruta":  "/Products/Availability",
+        "estado":  200,
+        "tipo":  "application/json; charset=utf-8",
+        "nosniff":  "nosniff",
+        "marcos":  "SAMEORIGIN"
+    },
+    {
+        "ruta":  "/hubs/stock/negotiate",
+        "estado":  200,
+        "transportes":  [
+                            "WebSockets",
+                            "ServerSentEvents",
+                            "LongPolling"
+                        ]
+    }
+]

@@ -50,3 +50,29 @@ database/backup.sql
 # OS
 .DS_Store
 Thumbs.db
+
+# Local runtime data
+.local/
+
+# Herramientas auxiliares conservadas solo en este equipo
+/scripts/
+
+# SonarScanner generated configuration and reports
+.sonarqube/
+.scannerwork/
+
+# Binary test outputs (curated XML/TRX evidence is kept separately)
+tests/quality/TestResults/
+**/node_modules/
+tests/quality/js-coverage/
+
+# Informes de cobertura y resultados completos: artefactos locales regenerables
+/tests/quality/*.xml
+/tests/quality/*.trx
+/tests/quality/*.lcov.info
+
+# Las instantaneas completas permanecen locales; publicar solo consultas Sonar
+/evidencias/**
+!/evidencias/**/
+!/evidencias/**/sonarqube/*.json
+!/evidencias/README.md

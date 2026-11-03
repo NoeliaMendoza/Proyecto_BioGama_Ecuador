@@ -43,7 +43,7 @@ services:
       ASPNETCORE_ENVIRONMENT: Production
       ASPNETCORE_URLS: http://0.0.0.0:8080
       ConnectionStrings__DefaultConnection: >-
-        Host=db;Port=5432;Database=biogama_ecuador;Username=biogama_user;Password=placeholder
+        Host=db;Port=5432;Database=biogama_ecuador;Username=biogama_user
       # Ollama__BaseUrl: http://ollama:11434
       # Ollama__Model: gemma2:2b
       # Ollama__TimeoutSeconds: "120"
@@ -128,7 +128,7 @@ services:
       ASPNETCORE_ENVIRONMENT: Production
       SERVICE_TYPE: mailworker
       ConnectionStrings__DefaultConnection: >-
-        Host=db;Port=5432;Database=biogama_ecuador;Username=biogama_user;Password=placeholder
+        Host=db;Port=5432;Database=biogama_ecuador;Username=biogama_user
       EmailSettings__SmtpServer: smtp.gmail.com
       EmailSettings__SmtpPort: "587"
       EmailSettings__SenderName: BioGama

@@ -25,11 +25,13 @@
             <form method="get" asp-action="Index">
                 <div class="row g-2 align-items-center">
                     <div class="col-12 col-md-5">
-                        <input type="text" name="nombre" class="form-control" placeholder="Buscar por nombre…"
+                        <label class="visually-hidden" for="filter-nombre">Nombre</label>
+                        <input id="filter-nombre" type="text" name="nombre" class="form-control" placeholder="Buscar por nombre…"
                                value="@ViewBag.Nombre" />
                     </div>
                     <div class="col-12 col-md-5">
-                        <input type="text" name="institucion" class="form-control" placeholder="Buscar por institución…"
+                        <label class="visually-hidden" for="filter-institucion">Institución</label>
+                        <input id="filter-institucion" type="text" name="institucion" class="form-control" placeholder="Buscar por institución…"
                                value="@ViewBag.Institucion" />
                     </div>
                     <div class="col-12 col-md-2 d-flex gap-2">

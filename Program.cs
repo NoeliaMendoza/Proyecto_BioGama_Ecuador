@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using BioGamaEcuador.Data;
 using BioGamaEcuador.Data.Seeders;
 using BioGamaEcuador.Workers;
+using BioGamaEcuador.Hubs;
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
@@ -38,6 +39,14 @@ if (dbPassword != null && connStr != null)
 builder.Services.AddControllersWithViews()
     .AddDataAnnotationsLocalization();
 builder.Services.AddRazorPages();
+builder.Services.AddScoped<BioGamaEcuador.Services.StockNotifications>();
+var signalR = builder.Services.AddSignalR();
+var redisConnection = builder.Configuration.GetConnectionString("Redis");
+if (!string.IsNullOrWhiteSpace(redisConnection))
+{
+    signalR.AddStackExchangeRedis(redisConnection, options =>
+        options.Configuration.ChannelPrefix = StackExchange.Redis.RedisChannel.Literal("BioGamaEcuador"));
+}
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connStr!));
@@ -74,7 +83,8 @@ builder.Services.Configure<BioGamaEcuador.Settings.PayPhoneSettings>(
 builder.Services.Configure<BioGamaEcuador.Settings.PayPalSettings>(
     builder.Configuration.GetSection("PayPal"));
 
-builder.Services.AddHttpClient<BioGamaEcuador.Services.Payments.PayPhoneApiLinkService>();
+builder.Services.AddHttpClient<BioGamaEcuador.Services.Payments.PayPhoneApiLinkService>(client =>
+    client.Timeout = TimeSpan.FromSeconds(15));
 builder.Services.AddHttpClient<BioGamaEcuador.Services.Payments.PayPalService>();
 builder.Services.AddScoped<BioGamaEcuador.Services.IInventoryService, BioGamaEcuador.Services.InventoryMovementService>();
 builder.Services.AddScoped<BioGamaEcuador.Services.IEmailService, BioGamaEcuador.Services.EmailService>();
@@ -89,13 +99,14 @@ builder.Services.Configure<BioGamaEcuador.Settings.EmailSettings>(
     builder.Configuration.GetSection("EmailSettings"));
 
 // Configuración y Servicio de IA Local Ollama
-//builder.Services.Configure<BioGamaEcuador.Settings.OllamaSettings>(
-//    builder.Configuration.GetSection("Ollama"));
-//builder.Services.AddHttpClient<BioGamaEcuador.Services.Ollama.IOllamaService, BioGamaEcuador.Services.Ollama.OllamaService>();
+builder.Services.Configure<BioGamaEcuador.Settings.OllamaSettings>(
+    builder.Configuration.GetSection("Ollama"));
+builder.Services.AddHttpClient<BioGamaEcuador.Services.Ollama.IOllamaService, BioGamaEcuador.Services.Ollama.OllamaService>();
 
 // ── Compartir cookies de autenticación entre réplicas ──────
 builder.Services.AddDataProtection()
-    .PersistKeysToFileSystem(new DirectoryInfo("/root/.aspnet/DataProtection-Keys"))
+    .PersistKeysToFileSystem(new DirectoryInfo(
+        builder.Configuration["DataProtection:KeysPath"] ?? "/root/.aspnet/DataProtection-Keys"))
     .SetApplicationName("BioGamaEcuador");
 
 // ── Sesiones distribuidas (PostgreSQL) ─────────────────────
@@ -114,6 +125,7 @@ if (isMailWorker)
 }
 
 var app = builder.Build();
+app.UseMiddleware<BioGamaEcuador.Middleware.SecurityHeadersMiddleware>();
 
 var cultura = new CultureInfo("es-EC");
 CultureInfo.DefaultThreadCurrentCulture = cultura;
@@ -123,7 +135,7 @@ app.UseRequestLocalization(new RequestLocalizationOptions
     DefaultRequestCulture = new RequestCulture(cultura),
     SupportedCultures = new[] { cultura },
     SupportedUICultures = new[] { cultura },
-    RequestCultureProviders = new List<IRequestCultureProvider> { new CustomRequestCultureProvider(_ => Task.FromResult(new ProviderCultureResult("es-EC"))) }
+    RequestCultureProviders = new List<IRequestCultureProvider> { new CustomRequestCultureProvider(_ => Task.FromResult<ProviderCultureResult?>(new ProviderCultureResult("es-EC"))) }
 });
 
 if (!app.Environment.IsDevelopment())
@@ -145,34 +157,55 @@ app.MapGet("/health", () =>
     return Results.Ok(new { status = "healthy", timestamp = DateTime.UtcNow });
 });
 
+app.MapGet("/api/info", (HttpContext context) =>
+{
+    context.Response.Headers.CacheControl = "no-store";
+    return Results.Ok(new
+    {
+        application = "BioGamaEcuador",
+        version = builder.Configuration["APP_VERSION"] ?? "local",
+        pod = Environment.GetEnvironmentVariable("HOSTNAME") ?? Environment.MachineName,
+        timestamp = DateTime.UtcNow
+    });
+});
+
+app.MapGet("/health/ready", async (AppDbContext db) =>
+{
+    try
+    {
+        return await db.Database.CanConnectAsync()
+            ? Results.Ok(new { status = "ready" })
+            : Results.StatusCode(503);
+    }
+    catch
+    {
+        return Results.StatusCode(503);
+    }
+});
+
 // En modo mailworker no se inicia el servidor web
 if (!isMailWorker)
 {
+    app.MapHub<ActivityHub>("/hubs/activity");
+    app.MapHub<StockHub>("/hubs/stock");
     app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
     app.MapRazorPages();
 
-    using (var scope = app.Services.CreateScope())
+    if (builder.Configuration.GetValue("Database:InitializeOnStartup", true))
     {
+        using var scope = app.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        try
-        {
-            await db.Database.MigrateAsync();
-        }
-        catch (Exception ex)
-        {
-            var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-            logger.LogWarning(ex, "Migration failed (likely race condition between replicas), continuing...");
-        }
+        await db.Database.MigrateAsync();
         await IdentitySeeder.SeedAsync(scope.ServiceProvider);
         await SalesModuleSeeder.SeedAsync(scope.ServiceProvider);
     }
 
-    app.Run();
+    await app.RunAsync();
 }
 else
 {
     // En modo mailworker solo corre el BackgroundService
-    app.Run();
+    await app.RunAsync();
 }

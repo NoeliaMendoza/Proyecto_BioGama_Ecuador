@@ -29,11 +29,13 @@
         <form method="get" asp-action="Index">
             <div class="row g-2 align-items-center">
                 <div class="col-12 col-md-4">
-                    <input type="text" name="busqueda" class="form-control" placeholder="Texto libre…"
+                    <label class="visually-hidden" for="filter-busqueda">Buscar</label>
+                        <input id="filter-busqueda" type="text" name="busqueda" class="form-control" placeholder="Texto libre…"
                            value="@ViewBag.Busqueda" />
                 </div>
                 <div class="col-6 col-md-2">
-                    <select name="speciesId" class="form-select">
+                    <label class="visually-hidden" for="filter-speciesId">Especie</label>
+                        <select id="filter-speciesId" name="speciesId" class="form-select">
                         <option value="">Todas las especies</option>
                         @foreach (var s in
                         (IEnumerable<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>?)ViewBag.SpeciesList ??
@@ -44,7 +46,8 @@
                     </select>
                 </div>
                 <div class="col-6 col-md-2">
-                    <select name="locationId" class="form-select">
+                    <label class="visually-hidden" for="filter-locationId">Ubicación</label>
+                        <select id="filter-locationId" name="locationId" class="form-select">
                         <option value="">Todos los lugares</option>
                         @foreach (var l in
                         (IEnumerable<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>?)ViewBag.LocationList ??
@@ -55,7 +58,8 @@
                     </select>
                 </div>
                 <div class="col-6 col-md-2">
-                    <select name="researcherId" class="form-select">
+                    <label class="visually-hidden" for="filter-researcherId">Investigador</label>
+                        <select id="filter-researcherId" name="researcherId" class="form-select">
                         <option value="">Todos los investigadores</option>
                         @foreach (var r in
                         (IEnumerable<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>?)ViewBag.ResearcherList ??
