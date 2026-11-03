@@ -1,0 +1,17 @@
+.git
+.codex
+.agents
+.aws
+.local
+.sonarqube
+.scannerwork
+evidencias
+tests
+**/bin
+**/obj
+database
+appsettings.Development.json
+appsettings.json
+scripts
+.env
+**/*.user
