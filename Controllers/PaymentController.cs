@@ -82,9 +82,9 @@ public class PaymentController : Controller
             await _context.SaveChangesAsync();
             return Redirect(url);
         }
-        catch (Exception ex)
+        catch
         {
-            TempData["Warning"] = ex.Message + " Puedes marcar el pago como pagado manualmente desde el panel de administrador.";
+            TempData["Warning"] = "No se pudo iniciar el pago con PayPhone. Inténtalo nuevamente más tarde.";
             return RedirectToAction(nameof(Details), new { id = payment.Id });
         }
     }
@@ -331,7 +331,7 @@ public class PaymentController : Controller
         return RedirectToActionResult(payment.OrderId);
     }
 
-    private IActionResult RedirectToActionResult(Guid orderId)
+    private RedirectToActionResult RedirectToActionResult(Guid orderId)
     {
         TempData["Success"] = "Pago confirmado correctamente.";
         return RedirectToAction("Confirmation", "Orders", new { id = orderId });

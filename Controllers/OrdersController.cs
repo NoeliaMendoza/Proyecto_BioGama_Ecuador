@@ -94,7 +94,7 @@ public class OrdersController : Controller
         await _context.Database.ExecuteSqlInterpolatedAsync(
             $"UPDATE \"PhysicalProducts\" SET \"ReservedStock\" = \"ReservedStock\" + {qty}, \"UpdatedAt\" = NOW() AT TIME ZONE 'UTC' WHERE \"Id\" = {productId} AND \"Stock\" - \"ReservedStock\" >= {qty}");
 
-    private Task ReleaseStockAsync(Guid productId, int qty) =>
+    private Task<int> ReleaseStockAsync(Guid productId, int qty) =>
         _context.Database.ExecuteSqlInterpolatedAsync(
             $"UPDATE \"PhysicalProducts\" SET \"ReservedStock\" = GREATEST(0, \"ReservedStock\" - {qty}), \"UpdatedAt\" = NOW() AT TIME ZONE 'UTC' WHERE \"Id\" = {productId}");
 
@@ -107,7 +107,7 @@ public class OrdersController : Controller
         await _context.Database.ExecuteSqlInterpolatedAsync(
             $"UPDATE \"Courses\" SET \"ReservedSeats\" = \"ReservedSeats\" + {qty} WHERE \"Id\" = {courseId} AND \"TotalSeats\" - \"ReservedSeats\" - \"ConfirmedSeats\" >= {qty}");
 
-    private Task ReleaseSeatAsync(Guid courseId, int qty) =>
+    private Task<int> ReleaseSeatAsync(Guid courseId, int qty) =>
         _context.Database.ExecuteSqlInterpolatedAsync(
             $"UPDATE \"Courses\" SET \"ReservedSeats\" = GREATEST(0, \"ReservedSeats\" - {qty}) WHERE \"Id\" = {courseId}");
 
@@ -425,7 +425,7 @@ public class OrdersController : Controller
             .Include(o => o.Details).ThenInclude(d => d.PhysicalProduct)
             .FirstOrDefaultAsync(o => o.UserId == userId && o.Status == "Pending"
                 && (orderId == null || o.Id == orderId));
-        if (order == null || !order.Details.Any())
+        if (order == null || order.Details.Count == 0)
         {
             TempData["Error"] = "No hay artículos en el carrito.";
             return RedirectToAction(nameof(Cart));
@@ -574,6 +574,10 @@ public class OrdersController : Controller
         var result = await _payPal.CreateOrderAsync(order.Total, $"Order:{order.Id}",
             $"{Request.Scheme}://{Request.Host}/Orders/Confirmation/{order.Id}",
             $"{Request.Scheme}://{Request.Host}/Orders/Cart");
+
+        if (string.IsNullOrWhiteSpace(result.OrderId))
+            return StatusCode(StatusCodes.Status503ServiceUnavailable,
+                new { success = false, message = "PayPal no está disponible temporalmente. No se ha confirmado ningún pago." });
 
         var payment = await _context.Payments.FirstOrDefaultAsync(p => p.OrderId == order.Id);
         if (payment == null)
