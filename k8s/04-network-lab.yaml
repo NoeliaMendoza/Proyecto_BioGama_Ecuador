@@ -7,6 +7,9 @@ metadata:
     app: iperf-server
 spec:
   automountServiceAccountToken: false
+  securityContext:
+    seccompProfile:
+      type: RuntimeDefault
   containers:
     - name: iperf
       image: nicolaka/netshoot:v0.14
@@ -22,9 +25,11 @@ spec:
         periodSeconds: 3
       resources:
         requests:
+          ephemeral-storage: 50Mi
           cpu: 50m
           memory: 32Mi
         limits:
+          ephemeral-storage: 256Mi
           cpu: "1"
           memory: 128Mi
 ---
@@ -53,17 +58,25 @@ metadata:
     app: network-client
 spec:
   automountServiceAccountToken: false
+  securityContext:
+    seccompProfile:
+      type: RuntimeDefault
   containers:
     - name: tools
       image: nicolaka/netshoot:v0.14
       command: ["sleep", "infinity"]
       securityContext:
+        allowPrivilegeEscalation: false
         capabilities:
+          drop: ["ALL"]
+          # Unica capacidad necesaria para tc/netem, solo en el pod temporal de laboratorio.
           add: ["NET_ADMIN"]
       resources:
         requests:
+          ephemeral-storage: 50Mi
           cpu: 50m
           memory: 32Mi
         limits:
+          ephemeral-storage: 256Mi
           cpu: "1"
           memory: 128Mi

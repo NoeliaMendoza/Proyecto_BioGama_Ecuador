@@ -40,17 +40,63 @@ spec:
         app: biogama-web
     spec:
       automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1654
+        runAsGroup: 1654
+        fsGroup: 1654
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: web
-          image: biogama-web:k8s-v10
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          image: biogama-web:k8s-v20
           imagePullPolicy: Never
           ports:
             - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: biogama-integrations
+                optional: true
           env:
             - name: TZ
               value: America/Guayaquil
             - name: APP_VERSION
-              value: k8s-v10
+              value: k8s-v20
+            - name: PayPal__BaseUrl
+              value: https://api-m.sandbox.paypal.com
+            - name: Ollama__BaseUrl
+              value: http://ollama:11434
+            - name: Ollama__Model
+              value: gemma2:2b
+            - name: Ollama__TimeoutSeconds
+              value: "180"
+            - name: Security__ImageOrigins__0
+              value: https://biogama.ec
+            - name: Security__ImageOrigins__1
+              value: https://encrypted-tbn0.gstatic.com
+            - name: Security__ImageOrigins__2
+              value: https://http2.mlstatic.com
+            - name: Security__ImageOrigins__3
+              value: https://avesconservacion.org
+            - name: Security__ImageOrigins__4
+              value: https://i.pinimg.com
+            - name: Security__ImageOrigins__5
+              value: https://upload.wikimedia.org
+            - name: Security__ImageOrigins__6
+              value: https://picsum.photos
+            - name: Security__ImageOrigins__7
+              value: https://fastly.picsum.photos
+            - name: Chat__PublicUrl
+              value: https://localhost:30082
+            - name: Chat__SigningKey
+              valueFrom:
+                secretKeyRef:
+                  name: biogama-chat
+                  key: signing_key
             - name: ConnectionStrings__Redis
               value: redis:6379,abortConnect=false
             # La base de pruebas ya fue inicializada con la primera replica.
@@ -59,7 +105,14 @@ spec:
             - name: ASPNETCORE_ENVIRONMENT
               value: Production
             - name: ASPNETCORE_URLS
-              value: http://0.0.0.0:8080
+              value: https://0.0.0.0:8080
+            - name: ASPNETCORE_Kestrel__Certificates__Default__Path
+              value: /tls/biogama.pfx
+            - name: ASPNETCORE_Kestrel__Certificates__Default__Password
+              valueFrom:
+                secretKeyRef:
+                  name: biogama-tls
+                  key: password
             - name: ConnectionStrings__DefaultConnection
               value: Host=db;Port=5432;Database=biogama_ecuador;Username=biogama_user
             - name: DataProtection__KeysPath
@@ -75,27 +128,42 @@ spec:
               memory: 512Mi
           startupProbe:
             httpGet:
+              scheme: HTTPS
               path: /health
               port: 8080
             periodSeconds: 5
             failureThreshold: 60
           readinessProbe:
             httpGet:
+              scheme: HTTPS
               path: /health/ready
               port: 8080
             periodSeconds: 5
           livenessProbe:
             httpGet:
+              scheme: HTTPS
               path: /health
               port: 8080
             periodSeconds: 10
           volumeMounts:
+            - name: tls
+              mountPath: /tls
+              readOnly: true
             - name: db-secret
               mountPath: /run/secrets
               readOnly: true
             - name: keys
               mountPath: /app/keys
       volumes:
+        - name: tls
+          secret:
+            secretName: biogama-tls
+            defaultMode: 0440
+            items:
+              - key: biogama.pfx
+                path: biogama.pfx
+              - key: certificate.pem
+                path: certificate.pem
         - name: db-secret
           secret:
             secretName: biogama-db
