@@ -1,0 +1,20 @@
+@model BioGamaEcuador.Models.RowActionsModel
+@{
+    var admin = User.IsInRole("Administrador");
+    var canEdit = admin || (!Model.AdminOnlyEdit && User.IsInRole("Investigador"));
+    var actions = new List<(string Action, string Css, string Icon, string Title)>();
+    var details = ("Details", "view", "bi-eye", Model.Tooltips ? "Ver" : "Ver detalles");
+    if (Model.ViewFirst) actions.Add(details);
+    if (canEdit) actions.Add(("Edit", "edit", "bi-pencil", "Editar"));
+    if (!Model.ViewFirst) actions.Add(details);
+    if (admin) actions.Add(("Delete", "delete", "bi-trash", "Eliminar"));
+}
+<div class="btn-action-group">
+    @foreach (var action in actions)
+    {
+        <a class="btn-action @action.Css" asp-action="@action.Action" asp-route-id="@Model.Id"
+           title="@action.Title" data-bs-toggle="@(Model.Tooltips ? "tooltip" : null)">
+            <i class="bi @action.Icon"></i>
+        </a>
+    }
+</div>

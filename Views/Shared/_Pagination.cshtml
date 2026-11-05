@@ -1,0 +1,19 @@
+@model BioGamaEcuador.Models.PaginationModel
+@if (Model.TotalPages > 1)
+{
+    <nav class="app-pagination" aria-label="Paginación">
+        <ul class="pagination justify-content-center flex-wrap">
+            <li class="page-item @(Model.Page == 1 ? "disabled" : "")"><a class="page-link" href="@Model.Link(1)" aria-label="Primera página">&laquo;</a></li>
+            <li class="page-item @(Model.Page == 1 ? "disabled" : "")"><a class="page-link" href="@Model.Link(Model.Page - 1)" aria-label="Página anterior">&lsaquo;</a></li>
+            @if (Model.FirstPage > 1) { <li class="page-item disabled"><span class="page-link">…</span></li> }
+            @for (var number = Model.FirstPage; number <= Model.LastPage; number++)
+            {
+                <li class="page-item @(number == Model.Page ? "active" : "")"><a class="page-link" href="@Model.Link(number)" aria-current="@(number == Model.Page ? "page" : null)">@number</a></li>
+            }
+            @if (Model.LastPage < Model.TotalPages) { <li class="page-item disabled"><span class="page-link">…</span></li> }
+            <li class="page-item @(Model.Page == Model.TotalPages ? "disabled" : "")"><a class="page-link" href="@Model.Link(Model.Page + 1)" aria-label="Página siguiente">&rsaquo;</a></li>
+            <li class="page-item @(Model.Page == Model.TotalPages ? "disabled" : "")"><a class="page-link" href="@Model.Link(Model.TotalPages)" aria-label="Última página">&raquo;</a></li>
+        </ul>
+        <p class="app-pagination-info">Página @Model.Page de @Model.TotalPages</p>
+    </nav>
+}

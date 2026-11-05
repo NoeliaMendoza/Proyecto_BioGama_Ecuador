@@ -41,6 +41,6 @@
 
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     tooltipTriggerList.forEach(function (el) {
-        new bootstrap.Tooltip(el);
+        bootstrap.Tooltip.getOrCreateInstance(el);
     });
 })();

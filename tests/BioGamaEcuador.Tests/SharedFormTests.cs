@@ -71,15 +71,62 @@ public sealed class SharedFormTests
         }
     }
 
-    private static async Task<string> Render(string folder, object model, Dictionary<string, object?>? values = null)
+    [Fact]
+    public async Task Shared_stat_cards_encode_labels_and_preserve_values()
+    {
+        var cards = new[] { new StatCardModel("<script>unsafe()</script>", 25, "bi-bug", "primary", "col-md-4") };
+        var html = await Render("Shared", cards, viewName: "_StatCards");
+        Assert.Contains("25", html);
+        Assert.Contains("&lt;script&gt;", html);
+        Assert.DoesNotContain("<script>unsafe()", html);
+        Assert.Contains("col-md-4", html);
+    }
+
+    [Theory]
+    [InlineData("Administrador", false, true, true)]
+    [InlineData("Investigador", false, true, false)]
+    [InlineData("Investigador", true, false, false)]
+    [InlineData("UsuarioPublico", false, false, false)]
+    public async Task Shared_row_actions_preserve_role_permissions(string role, bool adminOnly, bool edit, bool delete)
+    {
+        var html = await Render("Shared", new RowActionsModel(7, AdminOnlyEdit: adminOnly),
+            viewName: "_RowActions", role: role);
+        Assert.Contains("btn-action view", html);
+        Assert.Contains("/Families/Details/7", html);
+        Assert.Equal(edit, html.Contains("btn-action edit", StringComparison.Ordinal));
+        Assert.Equal(delete, html.Contains("btn-action delete", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task Shared_activity_encodes_content_and_keeps_empty_state()
+    {
+        var empty = await Render("Shared", new List<BioGamaEcuador.Models.Record>(), viewName: "_RecentActivity");
+        Assert.Contains("No hay registros recientes", empty);
+        var html = await Render("Shared", new List<BioGamaEcuador.Models.Record>
+        {
+            new() { Species = new Species { CommonName = "<script>unsafe()</script>" } }
+        }, viewName: "_RecentActivity");
+        Assert.Contains("&lt;script&gt;", html);
+        Assert.DoesNotContain("<script>unsafe()", html);
+    }
+
+    private static async Task<string> Render(string folder, object model, Dictionary<string, object?>? values = null,
+        string viewName = "_FormFields", string? role = null)
     {
         await using var application = new TestApplication();
         using var client = application.NewClient(null);
         await using var scope = application.Services.CreateAsyncScope();
         var services = scope.ServiceProvider;
         var http = new DefaultHttpContext { RequestServices = services };
-        var action = new ActionContext(http, new RouteData(), new ActionDescriptor());
-        var view = services.GetRequiredService<IRazorViewEngine>().GetView(null, $"/Views/{folder}/_FormFields.cshtml", false);
+        http.SetEndpoint(new Endpoint(_ => Task.CompletedTask, new EndpointMetadataCollection(), "Razor test"));
+        if (role is not null)
+            http.User = new System.Security.Claims.ClaimsPrincipal(new System.Security.Claims.ClaimsIdentity(
+                [new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Role, role)], "Test"));
+        var route = new RouteData();
+        route.Values["controller"] = "Families";
+        route.Values["action"] = "Index";
+        var action = new ActionContext(http, route, new ActionDescriptor());
+        var view = services.GetRequiredService<IRazorViewEngine>().GetView(null, $"/Views/{folder}/{viewName}.cshtml", false);
         Assert.True(view.Success);
         var data = new ViewDataDictionary(services.GetRequiredService<IModelMetadataProvider>(), new ModelStateDictionary()) { Model = model };
         if (values is not null) foreach (var value in values) data[value.Key] = value.Value;

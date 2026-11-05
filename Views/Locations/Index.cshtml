@@ -78,23 +78,7 @@
                             <td>@(item.Longitude != 0 ? $"{item.Longitude}°" : "—")</td>
                             <td>@(item.NaturalReserve?.Name ?? "—")</td>
                             <td class="actions-cell">
-                                <div class="btn-action-group">
-                                    @if (User.IsInRole("Administrador") || User.IsInRole("Investigador"))
-                                    {
-                                        <a class="btn-action edit" asp-action="Edit" asp-route-id="@item.Id" title="Editar">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                    }
-                                    <a class="btn-action view" asp-action="Details" asp-route-id="@item.Id" title="Ver detalles">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                    @if (User.IsInRole("Administrador"))
-                                    {
-                                        <a class="btn-action delete" asp-action="Delete" asp-route-id="@item.Id" title="Eliminar">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
-                                    }
-                                </div>
+                                <partial name="_RowActions" model='@(new BioGamaEcuador.Models.RowActionsModel(item.Id, AdminOnlyEdit: false, Tooltips: false, ViewFirst: false))' />
                             </td>
                         </tr>
                     }
@@ -112,53 +96,4 @@
     </div>
 </div>
 
-<nav class="mt-3" aria-label="Paginación">
-    <ul class="pagination justify-content-center">
-        @{
-            int paginaActual = (int)ViewBag.PaginaActual;
-            int totalPaginas = (int)ViewBag.TotalPaginas;
-            int rango = 9;
-            int inicio = Math.Max(1, paginaActual - rango);
-            int fin = Math.Min(totalPaginas, paginaActual + rango);
-        }
-
-        <li class="page-item @(paginaActual == 1 ? "disabled" : "")">
-            <a class="page-link" asp-action="Index" asp-route-pagina="1" asp-route-busqueda="@ViewBag.Busqueda"
-               asp-route-reserva="@ViewBag.ReservaFiltro">&laquo;</a>
-        </li>
-
-        <li class="page-item @(paginaActual == 1 ? "disabled" : "")">
-            <a class="page-link" asp-action="Index" asp-route-pagina="@(paginaActual - 1)"
-               asp-route-busqueda="@ViewBag.Busqueda" asp-route-reserva="@ViewBag.ReservaFiltro">&lsaquo;</a>
-        </li>
-
-        @if (inicio > 1)
-        {
-            <li class="page-item disabled"><span class="page-link">…</span></li>
-        }
-
-        @for (int i = inicio; i <= fin; i++)
-        {
-            <li class="page-item @(i == paginaActual ? "active" : "")">
-                <a class="page-link" asp-action="Index" asp-route-pagina="@i" asp-route-busqueda="@ViewBag.Busqueda"
-                   asp-route-reserva="@ViewBag.ReservaFiltro">@i</a>
-            </li>
-        }
-
-        @if (fin < totalPaginas)
-        {
-            <li class="page-item disabled"><span class="page-link">…</span></li>
-        }
-
-        <li class="page-item @(paginaActual == totalPaginas ? "disabled" : "")">
-            <a class="page-link" asp-action="Index" asp-route-pagina="@(paginaActual + 1)"
-               asp-route-busqueda="@ViewBag.Busqueda" asp-route-reserva="@ViewBag.ReservaFiltro">&rsaquo;</a>
-        </li>
-
-        <li class="page-item @(paginaActual == totalPaginas ? "disabled" : "")">
-            <a class="page-link" asp-action="Index" asp-route-pagina="@totalPaginas"
-               asp-route-busqueda="@ViewBag.Busqueda" asp-route-reserva="@ViewBag.ReservaFiltro">&raquo;</a>
-        </li>
-    </ul>
-    <p class="text-center text-muted small">Página @ViewBag.PaginaActual de @ViewBag.TotalPaginas</p>
-</nav>
+<partial name="_Pagination" model="BioGamaEcuador.Models.PaginationModel.From(ViewContext)" />

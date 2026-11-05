@@ -68,7 +68,7 @@
 
 @if (!isAuth)
 {
-    <div class="landing-hero" style="background-image: url('/images/Amazonas.webp');">
+    <div class="hero-amazon-background landing-hero" >
         <div class="landing-hero-overlay"></div>
         <div class="landing-hero-content">
             <span class="landing-hero-badge">Biodiversidad del Ecuador</span>
@@ -118,7 +118,7 @@
         <div class="row g-4">
             <div class="col-md-4">
                 <div class="landing-feature-card">
-                    <div class="landing-feature-icon" style="background: var(--color-accent); color: var(--color-primary);">
+                    <div class="icon-accent-primary landing-feature-icon" >
                         <i class="bi bi-search-heart"></i>
                     </div>
                     <h5>Explorar catálogo</h5>
@@ -130,7 +130,7 @@
             </div>
             <div class="col-md-4">
                 <div class="landing-feature-card">
-                    <div class="landing-feature-icon" style="background: #e0f2fe; color: #0369a1;">
+                    <div class="icon-sky landing-feature-icon" >
                         <i class="bi bi-journal-text"></i>
                     </div>
                     <h5>Documentar hallazgos</h5>
@@ -142,7 +142,7 @@
             </div>
             <div class="col-md-4">
                 <div class="landing-feature-card">
-                    <div class="landing-feature-icon" style="background: #fef3c7; color: #b45309;">
+                    <div class="icon-amber landing-feature-icon" >
                         <i class="bi bi-bar-chart-line"></i>
                     </div>
                     <h5>Reportes y estadísticas</h5>
@@ -163,8 +163,8 @@
         <div class="row g-4 justify-content-center">
             <div class="col-md-4">
                 <div class="landing-role-card">
-                    <div class="landing-role-icon" style="background: var(--color-accent);">
-                        <i class="bi bi-shield-check" style="color: var(--color-primary);"></i>
+                    <div class="background-accent landing-role-icon" >
+                        <i class="color-primary bi bi-shield-check" ></i>
                     </div>
                     <h5>Administrador</h5>
                     <p>Gestiona el catálogo completo, familias, reservas, ubicaciones y usuarios del sistema.</p>
@@ -172,8 +172,8 @@
             </div>
             <div class="col-md-4">
                 <div class="landing-role-card">
-                    <div class="landing-role-icon" style="background: #e0f2fe;">
-                        <i class="bi bi-binoculars" style="color: #0369a1;"></i>
+                    <div class="background-sky landing-role-icon" >
+                        <i class="color-sky bi bi-binoculars" ></i>
                     </div>
                     <h5>Investigador</h5>
                     <p>Registra hallazgos de campo, documenta especies y contribuye con observaciones científicas.</p>
@@ -181,8 +181,8 @@
             </div>
             <div class="col-md-4">
                 <div class="landing-role-card">
-                    <div class="landing-role-icon" style="background: #f0faf4;">
-                        <i class="bi bi-globe-americas" style="color: var(--color-primary-light);"></i>
+                    <div class="background-pale-green landing-role-icon" >
+                        <i class="color-primary-light bi bi-globe-americas" ></i>
                     </div>
                     <h5>Público</h5>
                     <p>Consulta la biodiversidad registrada, explora el catálogo y aprende sobre las especies del Ecuador.</p>
@@ -235,7 +235,7 @@
 }
 else if (isPublicUser)
 {
-    <div class="public-dash-hero" style="background-image: url('/images/Amazonas.webp');">
+    <div class="hero-amazon-background public-dash-hero" >
         <div class="public-dash-overlay"></div>
         <div class="public-dash-content">
             <span class="public-dash-badge">Bienvenido</span>
@@ -245,136 +245,18 @@ else if (isPublicUser)
     </div>
 
     <div class="row g-3 mt-4">
-        <div class="col-6 col-lg-3">
-            <div class="stat-card">
-                <div class="stat-card-icon primary"><i class="bi bi-bug"></i></div>
-                <div class="stat-card-label">Especies</div>
-                <div class="stat-card-value">@totalEspecies.ToString("N0")</div>
-            </div>
-        </div>
-        <div class="col-6 col-lg-3">
-            <div class="stat-card">
-                <div class="stat-card-icon secondary"><i class="bi bi-flower2"></i></div>
-                <div class="stat-card-label">Flora</div>
-                <div class="stat-card-value">@totalFlora.ToString("N0")</div>
-            </div>
-        </div>
-        <div class="col-6 col-lg-3">
-            <div class="stat-card">
-                <div class="stat-card-icon info"><i class="bi bi-binoculars"></i></div>
-                <div class="stat-card-label">Fauna</div>
-                <div class="stat-card-value">@totalFauna.ToString("N0")</div>
-            </div>
-        </div>
-        <div class="col-6 col-lg-3">
-            <div class="stat-card">
-                <div class="stat-card-icon warning"><i class="bi bi-moisture"></i></div>
-                <div class="stat-card-label">Hongos</div>
-                <div class="stat-card-value">@totalHongos.ToString("N0")</div>
-            </div>
-        </div>
+        <partial name="_StatCards" model='@(new BioGamaEcuador.Models.StatCardModel[] { new("Especies", totalEspecies, "bi-bug", "primary", "col-6 col-lg-3"), new("Flora", totalFlora, "bi-flower2", "secondary", "col-6 col-lg-3"), new("Fauna", totalFauna, "bi-binoculars", "info", "col-6 col-lg-3"), new("Hongos", totalHongos, "bi-moisture", "warning", "col-6 col-lg-3") })' />
     </div>
 
     <div class="row g-3 mt-2 mb-4">
-        <div class="col-sm-6 col-lg">
-            <div class="stat-card">
-                <div class="stat-card-icon primary"><i class="bi bi-tree"></i></div>
-                <div class="stat-card-label">Familias</div>
-                <div class="stat-card-value">@totalFamilias.ToString("N0")</div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-lg">
-            <div class="stat-card">
-                <div class="stat-card-icon info"><i class="bi bi-journal-text"></i></div>
-                <div class="stat-card-label">Registros</div>
-                <div class="stat-card-value">@totalRegistros.ToString("N0")</div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-lg">
-            <div class="stat-card">
-                <div class="stat-card-icon secondary"><i class="bi bi-geo-alt"></i></div>
-                <div class="stat-card-label">Ubicaciones</div>
-                <div class="stat-card-value">@totalUbicaciones.ToString("N0")</div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-lg">
-            <div class="stat-card">
-                <div class="stat-card-icon warning"><i class="bi bi-person-badge"></i></div>
-                <div class="stat-card-label">Investigadores</div>
-                <div class="stat-card-value">@totalInvestigadores.ToString("N0")</div>
-            </div>
-        </div>
+        <partial name="_StatCards" model='@(new BioGamaEcuador.Models.StatCardModel[] { new("Familias", totalFamilias, "bi-tree", "primary", "col-sm-6 col-lg"), new("Registros", totalRegistros, "bi-journal-text", "info", "col-sm-6 col-lg"), new("Ubicaciones", totalUbicaciones, "bi-geo-alt", "secondary", "col-sm-6 col-lg"), new("Investigadores", totalInvestigadores, "bi-person-badge", "warning", "col-sm-6 col-lg") })' />
     </div>
 
 
 
-    <div class="row g-3 mb-4">
-        <div class="col-lg-6">
-            <div class="app-card h-100">
-                <div class="app-card-header">
-                    <h6>Registros por región</h6>
-                </div>
-                <div class="app-card-body">
-                    <div class="chart-container">
-                        <canvas id="chartRegiones"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6">
-            <div class="app-card h-100">
-                <div class="app-card-header">
-                    <h6>Especies por estado de conservación</h6>
-                </div>
-                <div class="app-card-body">
-                    <div class="chart-container">
-                        <canvas id="chartEstados"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <partial name="_DashboardCharts" />
 
-    <div class="app-card table-card">
-        <div class="app-card-header">
-            <h6><i class="bi bi-clock-history me-2"></i>Actividad reciente</h6>
-            <a asp-controller="Records" asp-action="Index" class="btn btn-outline-primary btn-sm">Ver todos</a>
-        </div>
-        <div class="table-responsive">
-            <table class="table app-table">
-                <thead>
-                    <tr>
-                        <th>Especie</th>
-                        <th>Investigador</th>
-                        <th>Ubicación</th>
-                        <th>Fecha</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (!registrosRecientes.Any())
-                    {
-                        <tr>
-                            <td colspan="4">
-                                <div class="empty-state py-4">
-                                    <i class="bi bi-inbox"></i>
-                                    <p class="mb-0">No hay registros recientes</p>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                    @foreach (var r in registrosRecientes)
-                    {
-                        <tr>
-                            <td class="fw-medium">@r.Species?.CommonName</td>
-                            <td>@r.Researcher?.Name</td>
-                            <td>@r.Location?.PlaceName</td>
-                            <td>@r.DiscoveryDate.ToString("dd/MM/yyyy")</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <partial name="_RecentActivity" model="registrosRecientes" />
 
 }
 else
@@ -392,58 +274,11 @@ else
     </div>
 
     <div class="row g-3 mb-4">
-        <div class="col-6 col-xl">
-            <div class="stat-card">
-                <div class="stat-card-icon primary"><i class="bi bi-bug"></i></div>
-                <div class="stat-card-label">Total especies</div>
-                <div class="stat-card-value">@totalEspecies.ToString("N0")</div>
-            </div>
-        </div>
-        <div class="col-6 col-xl">
-            <div class="stat-card">
-                <div class="stat-card-icon secondary"><i class="bi bi-flower2"></i></div>
-                <div class="stat-card-label">Flora</div>
-                <div class="stat-card-value">@totalFlora.ToString("N0")</div>
-            </div>
-        </div>
-        <div class="col-6 col-xl">
-            <div class="stat-card">
-                <div class="stat-card-icon info"><i class="bi bi-binoculars"></i></div>
-                <div class="stat-card-label">Fauna</div>
-                <div class="stat-card-value">@totalFauna.ToString("N0")</div>
-            </div>
-        </div>
-        <div class="col-6 col-xl">
-            <div class="stat-card">
-                <div class="stat-card-icon warning"><i class="bi bi-moisture"></i></div>
-                <div class="stat-card-label">Hongos</div>
-                <div class="stat-card-value">@totalHongos.ToString("N0")</div>
-            </div>
-        </div>
-        <div class="col-6 col-xl">
-            <div class="stat-card">
-                <div class="stat-card-icon primary"><i class="bi bi-person-badge"></i></div>
-                <div class="stat-card-label">Investigadores</div>
-                <div class="stat-card-value">@totalInvestigadores.ToString("N0")</div>
-            </div>
-        </div>
+        <partial name="_StatCards" model='@(new BioGamaEcuador.Models.StatCardModel[] { new("Total especies", totalEspecies, "bi-bug", "primary", "col-6 col-xl"), new("Flora", totalFlora, "bi-flower2", "secondary", "col-6 col-xl"), new("Fauna", totalFauna, "bi-binoculars", "info", "col-6 col-xl"), new("Hongos", totalHongos, "bi-moisture", "warning", "col-6 col-xl"), new("Investigadores", totalInvestigadores, "bi-person-badge", "primary", "col-6 col-xl") })' />
     </div>
 
     <div class="row g-3 mb-4">
-        <div class="col-md-4">
-            <div class="stat-card">
-                <div class="stat-card-icon secondary"><i class="bi bi-tree"></i></div>
-                <div class="stat-card-label">Reservas naturales</div>
-                <div class="stat-card-value">@totalReservas.ToString("N0")</div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="stat-card">
-                <div class="stat-card-icon info"><i class="bi bi-journal-text"></i></div>
-                <div class="stat-card-label">Registros totales</div>
-                <div class="stat-card-value">@totalRegistros.ToString("N0")</div>
-            </div>
-        </div>
+        <partial name="_StatCards" model='@(new BioGamaEcuador.Models.StatCardModel[] { new("Reservas naturales", totalReservas, "bi-tree", "secondary", "col-md-4"), new("Registros totales", totalRegistros, "bi-journal-text", "info", "col-md-4") })' />
         <div class="col-md-4">
             <div class="app-card h-100">
                 <div class="app-card-header">
@@ -476,73 +311,9 @@ else
     </div>
     </div>
 
-    <div class="row g-3 mb-4">
-        <div class="col-lg-6">
-            <div class="app-card h-100">
-                <div class="app-card-header">
-                    <h6>Registros por región</h6>
-                </div>
-                <div class="app-card-body">
-                    <div class="chart-container">
-                        <canvas id="chartRegiones"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6">
-            <div class="app-card h-100">
-                <div class="app-card-header">
-                    <h6>Especies por estado de conservación</h6>
-                </div>
-                <div class="app-card-body">
-                    <div class="chart-container">
-                        <canvas id="chartEstados"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <partial name="_DashboardCharts" />
 
-    <div class="app-card table-card">
-        <div class="app-card-header">
-            <h6><i class="bi bi-clock-history me-2"></i>Actividad reciente</h6>
-            <a asp-controller="Records" asp-action="Index" class="btn btn-outline-primary btn-sm">Ver todos</a>
-        </div>
-        <div class="table-responsive">
-            <table class="table app-table">
-                <thead>
-                    <tr>
-                        <th>Especie</th>
-                        <th>Investigador</th>
-                        <th>Ubicación</th>
-                        <th>Fecha</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (!registrosRecientes.Any())
-                    {
-                        <tr>
-                            <td colspan="4">
-                                <div class="empty-state py-4">
-                                    <i class="bi bi-inbox"></i>
-                                    <p class="mb-0">No hay registros recientes</p>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                    @foreach (var r in registrosRecientes)
-                    {
-                        <tr>
-                            <td class="fw-medium">@r.Species?.CommonName</td>
-                            <td>@r.Researcher?.Name</td>
-                            <td>@r.Location?.PlaceName</td>
-                            <td>@r.DiscoveryDate.ToString("dd/MM/yyyy")</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <partial name="_RecentActivity" model="registrosRecientes" />
 
 }
 
