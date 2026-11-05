@@ -1,0 +1,16 @@
+{
+  "name": "biogama-support-chat",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Adaptación del chat privado de Tarea2 para atención de BioGama",
+  "engines": { "node": ">=24" },
+  "scripts": { "start": "node server/server.js", "test": "node --test tests/*.test.js" },
+  "dependencies": {
+    "@socket.io/redis-adapter": "8.3.0",
+    "express": "5.1.0",
+    "pg": "8.16.3",
+    "redis": "5.9.0",
+    "socket.io": "4.8.1"
+  },
+  "devDependencies": { "socket.io-client": "4.8.1" }
+}

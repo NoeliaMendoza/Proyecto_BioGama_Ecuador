@@ -1,0 +1,8 @@
+.support-chat{display:grid;grid-template-columns:1fr;gap:1rem;margin-block:1.5rem}
+.support-inbox,.support-conversation{background:var(--bs-body-bg,#fff);border:1px solid #dce4e0;border-radius:1rem;padding:1.25rem;min-width:0}
+.support-chat h2{font-size:1.15rem}.support-messages{list-style:none;padding:0;max-height:28rem;overflow-y:auto;margin-block:1rem}
+.support-message{padding:.8rem 1rem;margin:.7rem 0;border-radius:.8rem;background:#edf5f0;overflow-wrap:anywhere}
+.support-message.is-admin{background:#eaf1fb}.support-message p{white-space:pre-wrap;margin:.35rem 0}.support-message time{font-size:.8rem;color:#4d5c55}
+.support-thread{display:block;text-align:left;width:100%;padding:.8rem;margin-top:.6rem;border:1px solid #cbd8cf;background:#fff;border-radius:.5rem;overflow-wrap:anywhere}
+.support-thread[aria-pressed=true]{border:2px solid #246444;background:#edf5f0}
+@media(min-width:900px){.support-chat:has(.support-inbox){grid-template-columns:18rem 1fr}}
