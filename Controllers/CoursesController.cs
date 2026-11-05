@@ -29,15 +29,7 @@ namespace BioGamaEcuador.Controllers
                 .Where(c => c.IsActive)
                 .AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(busqueda))
-            {
-                var term = busqueda.Trim().ToLower();
-                query = query.Where(c =>
-                    c.Title.ToLower().Contains(term) ||
-                    c.Description.ToLower().Contains(term) ||
-                    c.Instructor.ToLower().Contains(term) ||
-                    c.Syllabus.ToLower().Contains(term));
-            }
+            query = BioGamaEcuador.Services.CourseSearch.Filter(query, busqueda);
 
             if (!string.IsNullOrWhiteSpace(modalidad))
             {
@@ -47,11 +39,13 @@ namespace BioGamaEcuador.Controllers
             if (!string.IsNullOrWhiteSpace(estado))
             {
                 var now = DateTime.UtcNow;
+                var today = now.Date;
                 query = estado switch
                 {
                     "abierto" => query.Where(c => (c.TotalSeats - c.ReservedSeats - c.ConfirmedSeats) > 0 && c.StartDate > now),
-                    "agotado" => query.Where(c => (c.TotalSeats - c.ReservedSeats - c.ConfirmedSeats) == 0 || c.StartDate <= now),
-                    "finalizado" => query.Where(c => c.StartDate <= now),
+                    "agotado" => query.Where(c => (c.TotalSeats - c.ReservedSeats - c.ConfirmedSeats) <= 0 && c.StartDate > now),
+                    "finalizado" => query.Where(c => c.EndDate < today),
+                    "en-curso" => query.Where(c => c.StartDate <= now && c.EndDate >= today),
                     _ => query
                 };
             }
