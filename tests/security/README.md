@@ -8,10 +8,15 @@ docker pull ghcr.io/zaproxy/zaproxy:stable
 ```
 
 El script usa la imagen oficial y comparte la red de un pod web de Docker
-Desktop. Accede a http://127.0.0.1:8080 dentro de esa red y comprueba primero que
+Desktop. Para la version HTTPS actual accede a https://localhost:8080 dentro
+de esa red. Valida previamente el certificado con la copia publica
+`.local/tls/certificate.pem`, sin omitir su verificacion, y comprueba que
 el catalogo devuelve HTTP 200 y HTML. Este metodo evita depender del DNS
 host.docker.internal, que no resuelve en este entorno. Analiza una replica;
 no es una prueba de balanceo del NodePort ni del acceso externo.
+La imagen desplegada actualmente puede ser anterior a las ultimas
+refactorizaciones locales: los metadatos identifican exactamente que se evalua.
+La comprobacion previa de TLS no sustituye una auditoria de configuracion TLS.
 Genera HTML, JSON, XML, Markdown, registro
 de ejecucion y metadatos en zap/<fecha-identificador>. Export-Evidence.ps1 copia
 esas ejecuciones a seguridad dentro de una carpeta de evidencias con manifiesto.
