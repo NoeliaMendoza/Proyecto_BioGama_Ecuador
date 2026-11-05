@@ -46,6 +46,9 @@ appsettings.Development.json
 
 # Large database backup (raw SQL — ~182MB uncompressed)
 database/backup.sql
+database/*.tar.gz
+database/*.dump
+database/*.bak
 
 # OS
 .DS_Store
@@ -53,6 +56,9 @@ Thumbs.db
 
 # Local runtime data
 .local/
+
+# Proyecto de referencia local; la adaptación publicable vive en chat-service/.
+/Tarea2_Mendoza_Noelia/
 
 # Herramientas auxiliares conservadas solo en este equipo
 /scripts/
