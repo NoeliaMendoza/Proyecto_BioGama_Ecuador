@@ -17,9 +17,7 @@ public class AuditService : IAuditService
 
     public async Task LogAsync(string action, string entity, string? entityId, string? oldValue, string? newValue, string userId, string? ipAddress = null)
     {
-        _logger.LogInformation(
-            "[AUDIT] Action={Action}, Entity={Entity}, EntityId={EntityId}, UserId={UserId}, IP={IP}, Old={Old}, New={New}",
-            action, entity, entityId, userId, ipAddress ?? "-", oldValue ?? "-", newValue ?? "-");
+        BioGamaEcuador.Services.LogEvents.AuditEvent(_logger,action, entity, entityId, userId, ipAddress ?? "-", oldValue ?? "-", newValue ?? "-");
 
         _db.AuditLogs.Add(new AuditLog
         {
@@ -37,9 +35,7 @@ public class AuditService : IAuditService
 
     public async Task LogLoginAsync(string userId, bool success, string? ipAddress = null)
     {
-        _logger.LogInformation(
-            "[AUDIT-LOGIN] UserId={UserId}, Success={Success}, IP={IP}",
-            userId, success, ipAddress ?? "-");
+        BioGamaEcuador.Services.LogEvents.AuditLogin(_logger,userId, success, ipAddress ?? "-");
 
         _db.AuditLogs.Add(new AuditLog
         {
@@ -56,9 +52,7 @@ public class AuditService : IAuditService
 
     public async Task LogMfaChangeAsync(string userId, bool enabled, string? ipAddress = null)
     {
-        _logger.LogInformation(
-            "[AUDIT-MFA] UserId={UserId}, Enabled={Enabled}, IP={IP}",
-            userId, enabled, ipAddress ?? "-");
+        BioGamaEcuador.Services.LogEvents.AuditMfaChange(_logger,userId, enabled, ipAddress ?? "-");
 
         _db.AuditLogs.Add(new AuditLog
         {
@@ -76,9 +70,7 @@ public class AuditService : IAuditService
 
     public async Task LogRoleChangeAsync(string userId, string oldRole, string newRole, string changedBy)
     {
-        _logger.LogInformation(
-            "[AUDIT-ROLE] UserId={UserId}, OldRole={OldRole}, NewRole={NewRole}, ChangedBy={ChangedBy}",
-            userId, oldRole, newRole, changedBy);
+        BioGamaEcuador.Services.LogEvents.AuditRoleChange(_logger,userId, oldRole, newRole, changedBy);
 
         _db.AuditLogs.Add(new AuditLog
         {

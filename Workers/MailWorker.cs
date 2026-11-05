@@ -39,7 +39,7 @@ public class MailWorker : BackgroundService
                     {
                         await emailService.SendEmailAsync(email.To, email.Subject, email.Body);
                         email.SentAt = DateTime.UtcNow;
-                        _logger.LogInformation("Correo enviado a {To}", email.To);
+                        BioGamaEcuador.Services.LogEvents.EmailSent(_logger,email.To);
                     }
                     catch (Exception ex)
                     {

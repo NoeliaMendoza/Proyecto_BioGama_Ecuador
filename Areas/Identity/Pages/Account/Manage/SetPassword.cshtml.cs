@@ -42,26 +42,8 @@ namespace BioGamaEcuador.Areas.Identity.Pages.Account.Manage
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        public class InputModel
+        public class InputModel : BioGamaEcuador.Models.NewPasswordInputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
-            [Required(ErrorMessage = "Este campo es obligatorio.")]
-            [StringLength(100, ErrorMessage = "{0} debe tener entre {2} y {1} caracteres.", MinimumLength = 6)]
-            [DataType(DataType.Password)]
-            [Display(Name = "Nueva contraseña")]
-            public string NewPassword { get; set; }
-
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
-            [DataType(DataType.Password)]
-            [Display(Name = "Confirmar nueva contraseña")]
-            [Compare("NewPassword", ErrorMessage = "Las contraseñas no coinciden.")]
-            public string ConfirmPassword { get; set; }
         }
 
         public async Task<IActionResult> OnGetAsync()
