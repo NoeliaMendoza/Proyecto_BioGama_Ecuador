@@ -1,0 +1,13 @@
+{
+    "consultasFallidas":  [
+                              {
+                                  "consulta":  "/api/project_analyses/search?project=biogama-ecuador\u0026ps=10",
+                                  "http":  403
+                              },
+                              {
+                                  "consulta":  "/api/measures/component_tree?component=biogama-ecuador\u0026qualifiers=FIL\u0026metricKeys=new_coverage,new_lines_to_cover,new_uncovered_lines,new_conditions_to_cover,new_uncovered_conditions\u0026ps=500",
+                                  "http":  403
+                              }
+                          ],
+    "nota":  "401: credencial rechazada; 403: revisar permisos; otros codigos requieren revisar la consulta y el servidor. No contiene tokens."
+}

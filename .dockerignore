@@ -13,5 +13,7 @@ database
 appsettings.Development.json
 appsettings.json
 scripts
+chat-service
+Tarea2_Mendoza_Noelia
 .env
 **/*.user

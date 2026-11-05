@@ -13,6 +13,32 @@ public sealed class RequestSecurityTests : IDisposable
 {
     private readonly TestApplication application = new();
 
+    [Fact]
+    public async Task Unavailable_paypal_does_not_store_fake_payment_identifiers()
+    {
+        using var client = application.NewClient("UsuarioPublico");
+        Guid orderId;
+        using (var scope = application.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            var order = new Order { UserId = "test-user", Total = 10 };
+            db.Orders.Add(order);
+            await db.SaveChangesAsync();
+            orderId = order.Id;
+        }
+        using var request = new HttpRequestMessage(HttpMethod.Post, "/Orders/CreatePayPalOrder")
+        {
+            Content = JsonContent.Create(new { orderId })
+        };
+        request.Headers.Add("RequestVerificationToken", await Token(client));
+        var response = await client.SendAsync(request);
+        Assert.Equal(HttpStatusCode.ServiceUnavailable, response.StatusCode);
+        using var check = application.Services.CreateScope();
+        var database = check.ServiceProvider.GetRequiredService<AppDbContext>();
+        Assert.Empty(database.Payments);
+        Assert.Equal("Pending", (await database.Orders.SingleAsync()).Status);
+    }
+
     private static async Task<string> Token(HttpClient client)
     {
         var tokens = await client.GetFromJsonAsync<Dictionary<string, string>>("/_test/antiforgery");

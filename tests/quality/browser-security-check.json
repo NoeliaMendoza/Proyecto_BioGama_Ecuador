@@ -1,11 +1,16 @@
 {
-  "time": "2026-11-03T18:38:28.489Z",
+  "time": "2026-11-05T03:48:44.913Z",
   "browser": "Isolated Chrome headless",
   "results": [
     {
+      "path": "/",
+      "violations": [],
+      "inlineHandlers": 0
+    },
+    {
       "path": "/Products",
       "violations": [],
-      "stock": "Disponibilidad en vivo. Actualizada a las 1:38:28 p.m.",
+      "stock": "Disponibilidad en vivo. Actualizada a las 10:48:42 p.m.",
       "inlineHandlers": 0
     },
     {
@@ -14,6 +19,31 @@
       "inlineHandlers": 0,
       "aiButton": "PASS; handler substituted to avoid calling AI service",
       "selection": "PASS; browser-only synthetic species, no database write"
+    },
+    {
+      "path": "/Courses",
+      "violations": [],
+      "inlineHandlers": 0
+    },
+    {
+      "path": "/Identity/Account/Login",
+      "violations": [],
+      "inlineHandlers": 0
+    },
+    {
+      "path": "/Identity/Account/Register",
+      "violations": [],
+      "inlineHandlers": 0
+    },
+    {
+      "path": "/Identity/Account/ForgotPassword",
+      "violations": [],
+      "inlineHandlers": 0
+    },
+    {
+      "path": "/Courses/Details/90614b19-9fe2-4693-9de5-e17ac833756e",
+      "violations": [],
+      "inlineHandlers": 0
     }
   ]
 }

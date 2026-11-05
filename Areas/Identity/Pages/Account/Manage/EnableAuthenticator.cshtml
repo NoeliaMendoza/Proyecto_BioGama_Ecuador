@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model EnableAuthenticatorModel
 @{
     ViewData["Title"] = "Configurar aplicación de autenticación";
@@ -21,8 +21,8 @@
         </li>
         <li>
             <p>Escanea el código QR o ingresa esta clave <kbd>@Model.SharedKey</kbd> en tu aplicación de autenticación. Los espacios y mayúsculas no importan.</p>
-            <div id="qrCode" style="width:200px;height:200px;margin:16px 0">
-                <img src="data:image/png;base64,@Model.QrCodeBase64" alt="Código QR" style="width:200px;height:200px" />
+            <div id="qrCode" class="authenticator-qr-container">
+                <img src="data:image/png;base64,@Model.QrCodeBase64" alt="Código QR" class="authenticator-qr-image" />
             </div>
         </li>
         <li>

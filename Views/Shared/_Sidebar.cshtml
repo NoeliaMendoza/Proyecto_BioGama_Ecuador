@@ -2,7 +2,7 @@
 @using Microsoft.EntityFrameworkCore
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
-@inject BioGamaEcuador.Data.AppDbContext DbContext
+@inject BioGamaEcuador.Services.CartSummary CartSummary
 
 @{
     var controller = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
@@ -17,14 +17,7 @@
     bool isAuthenticated = SignInManager.IsSignedIn(User);
 
     var userId = UserManager.GetUserId(User);
-    var cartCount = 0;
-    if (userId != null)
-    {
-        cartCount = await DbContext.Database.SqlQueryRaw<int>(
-            "SELECT COALESCE(SUM(od.\"Quantity\"), 0) AS \"Value\" FROM \"OrderDetails\" od INNER JOIN \"Orders\" o ON o.\"Id\" = od.\"OrderId\" WHERE o.\"UserId\" = {0} AND o.\"Status\" = 'Pending'",
-            userId
-        ).FirstOrDefaultAsync();
-    }
+    var cartCount = await CartSummary.CountAsync(userId);
 }
 
 <aside class="app-sidebar" id="appSidebar">
@@ -46,6 +39,10 @@
         </a>
 
         <div class="sidebar-section-title">Explorar</div>
+        <a class="sidebar-link @(IsActive("Chat") ? "active" : "")" asp-controller="Chat" asp-action="Index">
+            <i class="bi bi-chat-dots"></i>
+            <span class="sidebar-label">Atención y colaboración</span>
+        </a>
         <a class="sidebar-link @(IsActive("Public") ? "active" : "")" asp-controller="Public" asp-action="Catalogo">
             <i class="bi bi-book"></i>
             <span class="sidebar-label">Explorar Especies</span>

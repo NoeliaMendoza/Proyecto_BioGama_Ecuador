@@ -13,6 +13,8 @@ namespace BioGamaEcuador.Controllers;
 [Route("Admin/Inventory")]
 public sealed class InventoryController(AppDbContext context, IInventoryService inventory, IEmailService email, IAuditService audit) : Controller
 {
+    private static readonly string[] MovementTypes = new[] { "Entrada", "Salida", "Ajuste", "Reserva", "Confirmacion", "Liberacion", "Compra", "Devolucion", "Transferencia" };
+
     [HttpGet("")]
     public async Task<IActionResult> Index(string? type, Guid? productId, Guid? courseId, DateTime? from, DateTime? to)
     {
@@ -25,7 +27,7 @@ public sealed class InventoryController(AppDbContext context, IInventoryService 
         if (courseId.HasValue) q = q.Where(m => m.CourseId == courseId);
         if (from.HasValue) q = q.Where(m => m.FechaMovimiento >= from.Value.Date);
         if (to.HasValue) q = q.Where(m => m.FechaMovimiento < to.Value.Date.AddDays(1));
-        ViewBag.Types = new SelectList(new[] { "Entrada", "Salida", "Ajuste", "Reserva", "Confirmacion", "Liberacion", "Compra", "Devolucion", "Transferencia" }, type);
+        ViewBag.Types = new SelectList(MovementTypes, type);
         ViewBag.Products = new SelectList(await context.PhysicalProducts.OrderBy(p => p.Name).ToListAsync(), "Id", "Name", productId);
         ViewBag.Courses = new SelectList(await context.Courses.OrderBy(c => c.Title).ToListAsync(), "Id", "Title", courseId);
         ViewBag.From = from?.ToString("yyyy-MM-dd"); ViewBag.To = to?.ToString("yyyy-MM-dd");

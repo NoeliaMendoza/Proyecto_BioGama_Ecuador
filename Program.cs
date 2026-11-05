@@ -17,6 +17,7 @@ static string? ReadSecret(string name)
 }
 
 var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.ConfigureKestrel(options => options.AddServerHeader = false);
 
 var dbPassword = ReadSecret("db_password");
 var emailPass = ReadSecret("email_password");
@@ -39,6 +40,15 @@ if (dbPassword != null && connStr != null)
 builder.Services.AddControllersWithViews()
     .AddDataAnnotationsLocalization();
 builder.Services.AddRazorPages();
+// En produccion las cookies solo viajan por HTTPS. El desarrollo HTTP conserva
+// compatibilidad; no relajar esta politica en el despliegue de Kubernetes.
+var secureCookies = builder.Environment.IsDevelopment()
+    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.Always;
+builder.Services.AddAntiforgery(options => options.Cookie.SecurePolicy = secureCookies);
+builder.Services.ConfigureApplicationCookie(options => options.Cookie.SecurePolicy = secureCookies);
+builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddScoped<BioGamaEcuador.Services.ChatCredentials>();
+builder.Services.AddScoped<BioGamaEcuador.Services.CartSummary>();
 builder.Services.AddScoped<BioGamaEcuador.Services.StockNotifications>();
 var signalR = builder.Services.AddSignalR();
 var redisConnection = builder.Configuration.GetConnectionString("Redis");
@@ -106,7 +116,7 @@ builder.Services.AddHttpClient<BioGamaEcuador.Services.Ollama.IOllamaService, Bi
 // ── Compartir cookies de autenticación entre réplicas ──────
 builder.Services.AddDataProtection()
     .PersistKeysToFileSystem(new DirectoryInfo(
-        builder.Configuration["DataProtection:KeysPath"] ?? "/root/.aspnet/DataProtection-Keys"))
+        builder.Configuration["DataProtection:KeysPath"] ?? Path.Combine(builder.Environment.ContentRootPath, ".local", "keys")))
     .SetApplicationName("BioGamaEcuador");
 
 // ── Sesiones distribuidas (PostgreSQL) ─────────────────────
@@ -116,6 +126,7 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
+    options.Cookie.SecurePolicy = secureCookies;
 });
 
 // ── Worker de correo (solo en modo mailworker) ─────────────

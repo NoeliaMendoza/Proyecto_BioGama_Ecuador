@@ -1,0 +1,218 @@
+{
+    "complete":  true,
+    "issues":  [
+                   {
+                       "key":  "27fa1a99-5a8e-49aa-96de-b9dafe3a1f1f",
+                       "rule":  "external_roslyn:CA1865",
+                       "severity":  "INFO",
+                       "component":  "biogama-ecuador:Models/PaginationModel.cs",
+                       "project":  "biogama-ecuador",
+                       "line":  18,
+                       "hash":  "d1b3836ddaf3aeb1148fdc3ca3147836",
+                       "textRange":  {
+                                         "startLine":  18,
+                                         "endLine":  18,
+                                         "startOffset":  39,
+                                         "endOffset":  70
+                                     },
+                       "flows":  [
+
+                                 ],
+                       "status":  "OPEN",
+                       "message":  "Use \"string.StartsWith(char)\" en lugar de \"string.StartsWith(string)\" cuando tenga una cadena con un solo carÃ¡cter.",
+                       "effort":  "0min",
+                       "debt":  "0min",
+                       "author":  "",
+                       "tags":  [
+
+                                ],
+                       "creationDate":  "2026-11-04T23:23:38+0000",
+                       "updateDate":  "2026-11-04T23:23:38+0000",
+                       "type":  "CODE_SMELL",
+                       "externalRuleEngine":  "roslyn",
+                       "scope":  "MAIN",
+                       "quickFixAvailable":  false,
+                       "messageFormattings":  [
+
+                                              ],
+                       "codeVariants":  [
+
+                                        ],
+                       "cleanCodeAttribute":  "CONVENTIONAL",
+                       "cleanCodeAttributeCategory":  "CONSISTENT",
+                       "impacts":  [
+                                       {
+                                           "softwareQuality":  "MAINTAINABILITY",
+                                           "severity":  "INFO"
+                                       }
+                                   ],
+                       "issueStatus":  "OPEN",
+                       "prioritizedRule":  false,
+                       "fromSonarQubeUpdate":  false,
+                       "internalTags":  [
+
+                                        ],
+                       "linkedTicketStatus":  "NOT_LINKED"
+                   },
+                   {
+                       "key":  "7f3c3635-c185-43bf-8408-9b5ead3e6250",
+                       "rule":  "external_roslyn:CA1865",
+                       "severity":  "INFO",
+                       "component":  "biogama-ecuador:Services/ImageSource.cs",
+                       "project":  "biogama-ecuador",
+                       "line":  12,
+                       "hash":  "985eeeb0cfa1c1c84f00ff0a80c868ed",
+                       "textRange":  {
+                                         "startLine":  12,
+                                         "endLine":  12,
+                                         "startOffset":  82,
+                                         "endOffset":  113
+                                     },
+                       "flows":  [
+
+                                 ],
+                       "status":  "OPEN",
+                       "message":  "Use \"string.StartsWith(char)\" en lugar de \"string.StartsWith(string)\" cuando tenga una cadena con un solo carÃ¡cter.",
+                       "effort":  "0min",
+                       "debt":  "0min",
+                       "author":  "",
+                       "tags":  [
+
+                                ],
+                       "creationDate":  "2026-11-04T23:23:38+0000",
+                       "updateDate":  "2026-11-04T23:23:38+0000",
+                       "type":  "CODE_SMELL",
+                       "externalRuleEngine":  "roslyn",
+                       "scope":  "MAIN",
+                       "quickFixAvailable":  false,
+                       "messageFormattings":  [
+
+                                              ],
+                       "codeVariants":  [
+
+                                        ],
+                       "cleanCodeAttribute":  "CONVENTIONAL",
+                       "cleanCodeAttributeCategory":  "CONSISTENT",
+                       "impacts":  [
+                                       {
+                                           "softwareQuality":  "MAINTAINABILITY",
+                                           "severity":  "INFO"
+                                       }
+                                   ],
+                       "issueStatus":  "OPEN",
+                       "prioritizedRule":  false,
+                       "fromSonarQubeUpdate":  false,
+                       "internalTags":  [
+
+                                        ],
+                       "linkedTicketStatus":  "NOT_LINKED"
+                   },
+                   {
+                       "key":  "8afa763a-6ed2-4834-9cc3-fa3ab625cc38",
+                       "rule":  "kubernetes:S5849",
+                       "severity":  "MAJOR",
+                       "component":  "biogama-ecuador:k8s/04-network-lab.yaml",
+                       "project":  "biogama-ecuador",
+                       "line":  67,
+                       "hash":  "64f3b1b79ed98e249bc5d4b4ef036e5a",
+                       "textRange":  {
+                                         "startLine":  67,
+                                         "endLine":  67,
+                                         "startOffset":  16,
+                                         "endOffset":  27
+                                     },
+                       "flows":  [
+
+                                 ],
+                       "status":  "OPEN",
+                       "message":  "Make sure setting capabilities is safe here.",
+                       "effort":  "30min",
+                       "debt":  "30min",
+                       "author":  "nkmendoza@espe.edu.ec",
+                       "tags":  [
+                                    "cwe",
+                                    "former-hotspot"
+                                ],
+                       "creationDate":  "2026-11-03T13:18:32+0000",
+                       "updateDate":  "2026-11-04T17:02:34+0000",
+                       "type":  "VULNERABILITY",
+                       "scope":  "MAIN",
+                       "quickFixAvailable":  false,
+                       "messageFormattings":  [
+
+                                              ],
+                       "codeVariants":  [
+
+                                        ],
+                       "cleanCodeAttribute":  "CONVENTIONAL",
+                       "cleanCodeAttributeCategory":  "CONSISTENT",
+                       "impacts":  [
+                                       {
+                                           "softwareQuality":  "SECURITY",
+                                           "severity":  "MEDIUM"
+                                       }
+                                   ],
+                       "issueStatus":  "OPEN",
+                       "prioritizedRule":  false,
+                       "fromSonarQubeUpdate":  false,
+                       "internalTags":  [
+
+                                        ],
+                       "linkedTicketStatus":  "NOT_LINKED"
+                   },
+                   {
+                       "key":  "58c43b92-943b-499b-9406-2de97b57a38c",
+                       "rule":  "external_roslyn:CA1873",
+                       "severity":  "INFO",
+                       "component":  "biogama-ecuador:Areas/Identity/Pages/Account/Manage/DownloadPersonalData.cshtml.cs",
+                       "project":  "biogama-ecuador",
+                       "line":  44,
+                       "hash":  "dd0da6f6350c035fda3a8b1cc5a96ec1",
+                       "textRange":  {
+                                         "startLine":  44,
+                                         "endLine":  44,
+                                         "startOffset":  76,
+                                         "endOffset":  104
+                                     },
+                       "flows":  [
+
+                                 ],
+                       "status":  "OPEN",
+                       "message":  "La evaluaciÃ³n de este argumento puede ser costosa e innecesaria si el registro estÃ¡ deshabilitado",
+                       "effort":  "0min",
+                       "debt":  "0min",
+                       "author":  "nkmendoza@espe.edu.ec",
+                       "tags":  [
+
+                                ],
+                       "creationDate":  "2026-06-19T12:32:07+0000",
+                       "updateDate":  "2026-11-03T13:18:32+0000",
+                       "type":  "CODE_SMELL",
+                       "externalRuleEngine":  "roslyn",
+                       "scope":  "MAIN",
+                       "quickFixAvailable":  false,
+                       "messageFormattings":  [
+
+                                              ],
+                       "codeVariants":  [
+
+                                        ],
+                       "cleanCodeAttribute":  "CONVENTIONAL",
+                       "cleanCodeAttributeCategory":  "CONSISTENT",
+                       "impacts":  [
+                                       {
+                                           "softwareQuality":  "MAINTAINABILITY",
+                                           "severity":  "INFO"
+                                       }
+                                   ],
+                       "issueStatus":  "OPEN",
+                       "prioritizedRule":  false,
+                       "fromSonarQubeUpdate":  false,
+                       "internalTags":  [
+
+                                        ],
+                       "linkedTicketStatus":  "NOT_LINKED"
+                   }
+               ],
+    "total":  4
+}

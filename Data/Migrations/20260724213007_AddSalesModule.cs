@@ -9,6 +9,13 @@ namespace BioGamaEcuador.Data.Migrations
     /// <inheritdoc />
     public partial class AddSalesModule : Migration
     {
+        private static readonly string[] IsActiveStartDateColumns = new[] { "IsActive", "StartDate" };
+        private static readonly string[] CourseIdUserIdColumns = new[] { "CourseId", "UserId" };
+        private static readonly string[] CourseIdDateColumns = new[] { "CourseId", "Date" };
+        private static readonly string[] PhysicalProductIdDateColumns = new[] { "PhysicalProductId", "Date" };
+        private static readonly string[] UserIdDateColumns = new[] { "UserId", "Date" };
+        private static readonly string[] ProviderExternalIdColumns = new[] { "Provider", "ExternalId" };
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -331,7 +338,7 @@ namespace BioGamaEcuador.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Courses_IsActive_StartDate",
                 table: "Courses",
-                columns: new[] { "IsActive", "StartDate" });
+                columns: IsActiveStartDateColumns);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Courses_Modality",
@@ -357,7 +364,7 @@ namespace BioGamaEcuador.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Enrollments_CourseId_UserId",
                 table: "Enrollments",
-                columns: new[] { "CourseId", "UserId" },
+                columns: CourseIdUserIdColumns,
                 unique: true,
                 filter: "\"Status\" != 'Cancelled'");
 
@@ -384,7 +391,7 @@ namespace BioGamaEcuador.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_InventoryMovements_CourseId_Date",
                 table: "InventoryMovements",
-                columns: new[] { "CourseId", "Date" });
+                columns: CourseIdDateColumns);
 
             migrationBuilder.CreateIndex(
                 name: "IX_InventoryMovements_Date",
@@ -399,7 +406,7 @@ namespace BioGamaEcuador.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_InventoryMovements_PhysicalProductId_Date",
                 table: "InventoryMovements",
-                columns: new[] { "PhysicalProductId", "Date" });
+                columns: PhysicalProductIdDateColumns);
 
             migrationBuilder.CreateIndex(
                 name: "IX_InventoryMovements_Type",
@@ -409,7 +416,7 @@ namespace BioGamaEcuador.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_InventoryMovements_UserId_Date",
                 table: "InventoryMovements",
-                columns: new[] { "UserId", "Date" });
+                columns: UserIdDateColumns);
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderDetails_CourseId",
@@ -460,7 +467,7 @@ namespace BioGamaEcuador.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Payments_Provider_ExternalId",
                 table: "Payments",
-                columns: new[] { "Provider", "ExternalId" },
+                columns: ProviderExternalIdColumns,
                 unique: true);
 
             migrationBuilder.CreateIndex(

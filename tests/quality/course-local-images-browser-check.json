@@ -1,0 +1,56 @@
+{
+  "checkedAtUtc": "2026-11-05T04:53:24.879Z",
+  "version": "k8s-v20",
+  "externalImageHostsBlocked": true,
+  "externalImageRequests": 0,
+  "totalPhotos": 34,
+  "pages": [
+    {
+      "page": 1,
+      "cards": 12,
+      "photos": 12,
+      "localPhotos": 12,
+      "loaded": 12,
+      "versionedStyles": 1,
+      "violations": [],
+      "layers": [
+        {
+          "loaded": true,
+          "imageOnTop": true
+        },
+        {
+          "loaded": true,
+          "imageOnTop": true
+        },
+        {
+          "loaded": true,
+          "imageOnTop": true
+        }
+      ]
+    },
+    {
+      "page": 2,
+      "cards": 12,
+      "photos": 12,
+      "localPhotos": 12,
+      "loaded": 12,
+      "versionedStyles": 1,
+      "violations": []
+    },
+    {
+      "page": 3,
+      "cards": 10,
+      "photos": 10,
+      "localPhotos": 10,
+      "loaded": 10,
+      "versionedStyles": 1,
+      "violations": []
+    }
+  ],
+  "legacyCssSimulation": {
+    "simulation": true,
+    "imageLoaded": true,
+    "imagePresent": true,
+    "imageOnTop": false
+  }
+}

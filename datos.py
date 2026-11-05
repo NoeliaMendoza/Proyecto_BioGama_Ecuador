@@ -9,7 +9,7 @@ Requiere: pip install faker psycopg2-binary
 
 import psycopg2
 from faker import Faker
-import random
+from random import SystemRandom
 import os
 from datetime import datetime, timezone
 
@@ -37,7 +37,8 @@ N_RECORDS     = 483_300
 
 fake = Faker("es_ES")
 Faker.seed(42)
-random.seed(42)
+# Selecciones del sistema operativo: estos conjuntos ya no son reproducibles por semilla.
+secure_random = SystemRandom()
 
 # ─── REGIONES Y SUS DATOS GEOGRÁFICOS ─────────────────────────────
 # Cada región tiene: coordenadas reales, lugares, altitud típica
@@ -364,7 +365,7 @@ INSTITUTIONS = [
 ]
 
 def nombre_ecuatoriano():
-    return f"{random.choice(NOMBRES)} {random.choice(APELLIDOS)} {random.choice(APELLIDOS)}"
+    return f"{secure_random.choice(NOMBRES)} {secure_random.choice(APELLIDOS)} {secure_random.choice(APELLIDOS)}"
 
 def get_connection():
     return psycopg2.connect(**load_db_config())
@@ -396,11 +397,11 @@ def generar_families(cur):
         if len(batch) >= N_FAMILIES: break
         name = n if n not in used_names else f"{n} {i+1}"
         used_names.add(name)
-        batch.append((name[:100], random.choice(["Plantae","Fungi"]), True, datetime.now(timezone.utc)))
+        batch.append((name[:100], secure_random.choice(["Plantae","Fungi"]), True, datetime.now(timezone.utc)))
 
     while len(batch) < N_FAMILIES:
         idx = len(batch)
-        batch.append((f"Familia sp. {idx}"[:100], random.choice(["Animalia","Plantae"]), True, datetime.now(timezone.utc)))
+        batch.append((f"Familia sp. {idx}"[:100], secure_random.choice(["Animalia","Plantae"]), True, datetime.now(timezone.utc)))
 
     insert_batch(cur, sql, batch[:N_FAMILIES])
     print(f"   {N_FAMILIES} familias insertadas")
@@ -416,22 +417,22 @@ def generar_natural_reserves(cur):
             if len(batch) >= N_NATURAL_RES: break
             batch.append((
                 reserva[:150], region,
-                round(random.uniform(500, 1_000_000), 2),
-                random.randint(1959, 2020),
-                random.choice(DESCRIPCIONES_RESERVA),
+                round(secure_random.uniform(500, 1_000_000), 2),
+                secure_random.randint(1959, 2020),
+                secure_random.choice(DESCRIPCIONES_RESERVA),
                 True, datetime.now(timezone.utc)
             ))
 
     # Completar con variantes
     regiones_list = list(REGIONES.keys())
     while len(batch) < N_NATURAL_RES:
-        region = random.choice(regiones_list)
-        base = random.choice(REGIONES[region]["reservas"])
+        region = secure_random.choice(regiones_list)
+        base = secure_random.choice(REGIONES[region]["reservas"])
         batch.append((
             f"{base} - Zona {len(batch)}"[:150], region,
-            round(random.uniform(100, 500_000), 2),
-            random.randint(1959, 2022),
-            random.choice(DESCRIPCIONES_RESERVA),
+            round(secure_random.uniform(100, 500_000), 2),
+            secure_random.randint(1959, 2022),
+            secure_random.choice(DESCRIPCIONES_RESERVA),
             True, datetime.now(timezone.utc)
         ))
 
@@ -447,18 +448,18 @@ def generar_locations(cur, reserve_map):
     sufijos = ["","Norte","Sur","Alta","Baja","Sector 1","Sector 2","Margen Izquierda","Margen Derecha","Centro"]
     batch = []
     for i in range(N_LOCATIONS):
-        rid = random.choice(reserve_ids)
+        rid = secure_random.choice(reserve_ids)
         region = reserve_map[rid]
         datos = REGIONES[region]
-        lugar = random.choice(datos["lugares"])
-        sufijo = random.choice(sufijos)
+        lugar = secure_random.choice(datos["lugares"])
+        sufijo = secure_random.choice(sufijos)
         place = f"{lugar} {sufijo}".strip()
         alt_min, alt_max = datos["altitud"]
         batch.append((
             place[:150],
-            random.randint(alt_min, alt_max),
-            round(random.uniform(*datos["lat"]), 6),
-            round(random.uniform(*datos["lon"]), 6),
+            secure_random.randint(alt_min, alt_max),
+            round(secure_random.uniform(*datos["lat"]), 6),
+            round(secure_random.uniform(*datos["lon"]), 6),
             rid, True, datetime.now(timezone.utc)
         ))
         if len(batch) == BATCH_SIZE:
@@ -475,13 +476,13 @@ def generar_researchers(cur):
     batch = []
     for i in range(N_RESEARCHERS):
         nombre = nombre_ecuatoriano()
-        apellido = random.choice(APELLIDOS).lower().replace(" ","")
-        email = f"{nombre.split()[0].lower()}.{apellido}{random.randint(1,99)}@{random.choice(dominios)}"
+        apellido = secure_random.choice(APELLIDOS).lower().replace(" ","")
+        email = f"{nombre.split()[0].lower()}.{apellido}{secure_random.randint(1,99)}@{secure_random.choice(dominios)}"
         batch.append((
             nombre[:100],
-            random.choice(INSTITUTIONS)[:100],
+            secure_random.choice(INSTITUTIONS)[:100],
             email[:100],
-            random.choice(especialidades),
+            secure_random.choice(especialidades),
             True, datetime.now(timezone.utc)
         ))
         if len(batch) == BATCH_SIZE:
@@ -505,12 +506,12 @@ def generar_species(cur, family_map):
     for region, lista in ESPECIES_POR_REGION.items():
         for common, scientific, status in lista:
             # Buscar familia coherente
-            fid = random.choice(family_ids_list)
+            fid = secure_random.choice(family_ids_list)
             for fid2, (fname, freino, fregiones) in family_map.items():
                 if region in fregiones:
                     fid = fid2
                     break
-            is_endemic = region == "Galápagos" or random.random() < 0.3
+            is_endemic = region == "Galápagos" or secure_random.random() < 0.3
             especies.append((common, scientific, STATUS_TO_ID.get(status, 7), region, fid, is_endemic))
 
     # Completar con variaciones hasta N_SPECIES
@@ -524,20 +525,20 @@ def generar_species(cur, family_map):
     regiones_list = list(REGIONES.keys())
 
     while len(especies) < N_SPECIES:
-        region = random.choice(regiones_list)
-        prefix = random.choice(prefixes_por_region[region])
-        sufijo = random.choice(sufijos_sci)
+        region = secure_random.choice(regiones_list)
+        prefix = secure_random.choice(prefixes_por_region[region])
+        sufijo = secure_random.choice(sufijos_sci)
         idx = len(especies)
         # Familia coherente con la región
-        fid = random.choice(family_ids_list)
+        fid = secure_random.choice(family_ids_list)
         for fid2, (fname, freino, fregiones) in family_map.items():
             if region in fregiones:
                 fid = fid2
                 break
-        is_endemic = region == "Galápagos" or random.random() < 0.25
-        status = random.choice([6,6,6,5,4,3,2,7])
-        base_common = random.choice(ESPECIES_POR_REGION[region])[0]
-        common = f"{base_common} {random.choice(['de montaña','amazónico','andino','costero','silvestre','de páramo','marino'])}"
+        is_endemic = region == "Galápagos" or secure_random.random() < 0.25
+        status = secure_random.choice([6,6,6,5,4,3,2,7])
+        base_common = secure_random.choice(ESPECIES_POR_REGION[region])[0]
+        common = f"{base_common} {secure_random.choice(['de montaña','amazónico','andino','costero','silvestre','de páramo','marino'])}"
         scientific = f"{prefix} {sufijo} {idx % 50 + 1}"
         especies.append((common, scientific, status, region, fid, is_endemic))
 
@@ -580,7 +581,7 @@ def generar_records(cur, especies_data, location_region_map, researcher_specialt
     batch = []
     for i in range(N_RECORDS):
         # Elegir región y buscar especie + ubicación coherentes
-        region = random.choice(regiones_list)
+        region = secure_random.choice(regiones_list)
         sp_list = species_by_region.get(region, [])
         loc_list = locations_by_region.get(region, [])
 
@@ -589,15 +590,15 @@ def generar_records(cur, especies_data, location_region_map, researcher_specialt
             sp_list = species_by_region.get(region, list(especies_data.keys()))
             loc_list = locations_by_region.get(region, list(location_region_map.keys()))
 
-        sp_id = random.choice(sp_list)
-        loc_id = random.choice(loc_list)
-        res_id = random.choice(researcher_ids)
+        sp_id = secure_random.choice(sp_list)
+        loc_id = secure_random.choice(loc_list)
+        res_id = secure_random.choice(researcher_ids)
 
         batch.append((
             sp_id, loc_id, res_id,
             fake.date_time_between(start_date="-20y", end_date="now", tzinfo=timezone.utc),
-            random.randint(1, 200),
-            random.choice(OBSERVACIONES),
+            secure_random.randint(1, 200),
+            secure_random.choice(OBSERVACIONES),
             True, datetime.now(timezone.utc)
         ))
         if len(batch) == BATCH_SIZE:

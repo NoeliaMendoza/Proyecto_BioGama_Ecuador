@@ -8,6 +8,14 @@ namespace BioGamaEcuador.Data.Migrations
     /// <inheritdoc />
     public partial class SyncInventoryMovementsSchema : Migration
     {
+        private static readonly string[] CourseIdFechaMovimientoColumns = new[] { "CourseId", "FechaMovimiento" };
+        private static readonly string[] PhysicalProductIdFechaMovimientoColumns = new[] { "PhysicalProductId", "FechaMovimiento" };
+        private static readonly string[] SucursalIdFechaMovimientoColumns = new[] { "SucursalId", "FechaMovimiento" };
+        private static readonly string[] UsuarioIdFechaMovimientoColumns = new[] { "UsuarioId", "FechaMovimiento" };
+        private static readonly string[] CourseIdDateColumns = new[] { "CourseId", "Date" };
+        private static readonly string[] PhysicalProductIdDateColumns = new[] { "PhysicalProductId", "Date" };
+        private static readonly string[] UserIdDateColumns = new[] { "UserId", "Date" };
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -483,7 +491,7 @@ namespace BioGamaEcuador.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_InventoryMovements_CourseId_FechaMovimiento",
                 table: "InventoryMovements",
-                columns: new[] { "CourseId", "FechaMovimiento" });
+                columns: CourseIdFechaMovimientoColumns);
 
             migrationBuilder.CreateIndex(
                 name: "IX_InventoryMovements_FechaMovimiento",
@@ -493,7 +501,7 @@ namespace BioGamaEcuador.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_InventoryMovements_PhysicalProductId_FechaMovimiento",
                 table: "InventoryMovements",
-                columns: new[] { "PhysicalProductId", "FechaMovimiento" });
+                columns: PhysicalProductIdFechaMovimientoColumns);
 
             migrationBuilder.CreateIndex(
                 name: "IX_InventoryMovements_SucursalId",
@@ -503,7 +511,7 @@ namespace BioGamaEcuador.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_InventoryMovements_SucursalId_FechaMovimiento",
                 table: "InventoryMovements",
-                columns: new[] { "SucursalId", "FechaMovimiento" });
+                columns: SucursalIdFechaMovimientoColumns);
 
             migrationBuilder.CreateIndex(
                 name: "IX_InventoryMovements_TipoMovimiento",
@@ -513,7 +521,7 @@ namespace BioGamaEcuador.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_InventoryMovements_UsuarioId_FechaMovimiento",
                 table: "InventoryMovements",
-                columns: new[] { "UsuarioId", "FechaMovimiento" });
+                columns: UsuarioIdFechaMovimientoColumns);
 
             migrationBuilder.AddCheckConstraint(
                 name: "CK_InventoryMovement_Cantidad_Positive",
@@ -993,7 +1001,7 @@ namespace BioGamaEcuador.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_InventoryMovements_CourseId_Date",
                 table: "InventoryMovements",
-                columns: new[] { "CourseId", "Date" });
+                columns: CourseIdDateColumns);
 
             migrationBuilder.CreateIndex(
                 name: "IX_InventoryMovements_Date",
@@ -1003,7 +1011,7 @@ namespace BioGamaEcuador.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_InventoryMovements_PhysicalProductId_Date",
                 table: "InventoryMovements",
-                columns: new[] { "PhysicalProductId", "Date" });
+                columns: PhysicalProductIdDateColumns);
 
             migrationBuilder.CreateIndex(
                 name: "IX_InventoryMovements_Type",
@@ -1013,7 +1021,7 @@ namespace BioGamaEcuador.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_InventoryMovements_UserId_Date",
                 table: "InventoryMovements",
-                columns: new[] { "UserId", "Date" });
+                columns: UserIdDateColumns);
 
             migrationBuilder.AddCheckConstraint(
                 name: "CK_InventoryMovement_Quantity_Positive",

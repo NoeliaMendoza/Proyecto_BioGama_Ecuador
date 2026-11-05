@@ -860,6 +860,9 @@ label.control-label {
 }
 
 .course-card-image img {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -871,7 +874,14 @@ label.control-label {
   transform: scale(1.03);
 }
 
+.course-card-image img[hidden] {
+  display: none;
+}
+
 .course-card-image-placeholder {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
   width: 100%;
   height: 100%;
   display: flex;
@@ -889,6 +899,7 @@ label.control-label {
 }
 
 .course-card-status {
+  z-index: 2;
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;

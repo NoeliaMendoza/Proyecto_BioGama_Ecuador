@@ -29,6 +29,8 @@ namespace BioGamaEcuador.Models
         [BindRequired] public bool IsEndemic { get; set; } = false;
 
         [Required(ErrorMessage = "La familia es obligatoria.")]
+        [BindRequired]
+        [Range(1, int.MaxValue, ErrorMessage = "Selecciona una familia válida.")]
         public int FamilyId { get; set; }
         public Family? Family { get; set; }
 

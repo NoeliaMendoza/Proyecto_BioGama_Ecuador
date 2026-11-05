@@ -93,7 +93,7 @@ namespace BioGamaEcuador.Areas.Identity.Pages.Account
 
             if (result.Succeeded)
             {
-                _logger.LogInformation("User with ID '{UserId}' logged in with a recovery code.", user.Id);
+                BioGamaEcuador.Services.LogEvents.RecoveryCodeLogin(_logger,user.Id);
                 return LocalRedirect(returnUrl ?? Url.Content("~/"));
             }
             if (result.IsLockedOut)

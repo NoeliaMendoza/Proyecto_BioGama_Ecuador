@@ -1,0 +1,165 @@
+{
+    "complete":  true,
+    "issues":  [
+                   {
+                       "key":  "332cb0e3-6a38-4a73-a0a0-44435e01c782",
+                       "rule":  "external_roslyn:CA1861",
+                       "severity":  "INFO",
+                       "component":  "biogama-ecuador:tests/BioGamaEcuador.Tests/DuplicationContractTests.cs",
+                       "project":  "biogama-ecuador",
+                       "line":  51,
+                       "hash":  "57d215a971922bf8942724fa507cc823",
+                       "textRange":  {
+                                         "startLine":  51,
+                                         "endLine":  51,
+                                         "startOffset":  21,
+                                         "endOffset":  59
+                                     },
+                       "flows":  [
+
+                                 ],
+                       "status":  "OPEN",
+                       "message":  "Preferir campos \"static readonly\" frente a argumentos de matriz constantes si se llama repetidamente al mÃ©todo llamado y no muta la matriz pasada",
+                       "effort":  "0min",
+                       "debt":  "0min",
+                       "author":  "",
+                       "tags":  [
+
+                                ],
+                       "creationDate":  "2026-11-04T23:42:41+0000",
+                       "updateDate":  "2026-11-04T23:42:41+0000",
+                       "type":  "CODE_SMELL",
+                       "externalRuleEngine":  "roslyn",
+                       "scope":  "TEST",
+                       "quickFixAvailable":  false,
+                       "messageFormattings":  [
+
+                                              ],
+                       "codeVariants":  [
+
+                                        ],
+                       "cleanCodeAttribute":  "CONVENTIONAL",
+                       "cleanCodeAttributeCategory":  "CONSISTENT",
+                       "impacts":  [
+                                       {
+                                           "softwareQuality":  "MAINTAINABILITY",
+                                           "severity":  "INFO"
+                                       }
+                                   ],
+                       "issueStatus":  "OPEN",
+                       "prioritizedRule":  false,
+                       "fromSonarQubeUpdate":  false,
+                       "internalTags":  [
+
+                                        ],
+                       "linkedTicketStatus":  "NOT_LINKED"
+                   },
+                   {
+                       "key":  "8b313d96-6695-4306-b4a2-39ea7f1f5d1e",
+                       "rule":  "external_roslyn:CA1861",
+                       "severity":  "INFO",
+                       "component":  "biogama-ecuador:tests/BioGamaEcuador.Tests/DuplicationContractTests.cs",
+                       "project":  "biogama-ecuador",
+                       "line":  61,
+                       "hash":  "4cef028f25975632371690bfde894e7b",
+                       "textRange":  {
+                                         "startLine":  61,
+                                         "endLine":  61,
+                                         "startOffset":  21,
+                                         "endOffset":  41
+                                     },
+                       "flows":  [
+
+                                 ],
+                       "status":  "OPEN",
+                       "message":  "Preferir campos \"static readonly\" frente a argumentos de matriz constantes si se llama repetidamente al mÃ©todo llamado y no muta la matriz pasada",
+                       "effort":  "0min",
+                       "debt":  "0min",
+                       "author":  "",
+                       "tags":  [
+
+                                ],
+                       "creationDate":  "2026-11-04T23:42:41+0000",
+                       "updateDate":  "2026-11-04T23:42:41+0000",
+                       "type":  "CODE_SMELL",
+                       "externalRuleEngine":  "roslyn",
+                       "scope":  "TEST",
+                       "quickFixAvailable":  false,
+                       "messageFormattings":  [
+
+                                              ],
+                       "codeVariants":  [
+
+                                        ],
+                       "cleanCodeAttribute":  "CONVENTIONAL",
+                       "cleanCodeAttributeCategory":  "CONSISTENT",
+                       "impacts":  [
+                                       {
+                                           "softwareQuality":  "MAINTAINABILITY",
+                                           "severity":  "INFO"
+                                       }
+                                   ],
+                       "issueStatus":  "OPEN",
+                       "prioritizedRule":  false,
+                       "fromSonarQubeUpdate":  false,
+                       "internalTags":  [
+
+                                        ],
+                       "linkedTicketStatus":  "NOT_LINKED"
+                   },
+                   {
+                       "key":  "8afa763a-6ed2-4834-9cc3-fa3ab625cc38",
+                       "rule":  "kubernetes:S5849",
+                       "severity":  "MAJOR",
+                       "component":  "biogama-ecuador:k8s/04-network-lab.yaml",
+                       "project":  "biogama-ecuador",
+                       "line":  73,
+                       "hash":  "64f3b1b79ed98e249bc5d4b4ef036e5a",
+                       "textRange":  {
+                                         "startLine":  73,
+                                         "endLine":  73,
+                                         "startOffset":  16,
+                                         "endOffset":  27
+                                     },
+                       "flows":  [
+
+                                 ],
+                       "status":  "OPEN",
+                       "message":  "Make sure setting capabilities is safe here.",
+                       "effort":  "30min",
+                       "debt":  "30min",
+                       "author":  "nkmendoza@espe.edu.ec",
+                       "tags":  [
+                                    "cwe",
+                                    "former-hotspot"
+                                ],
+                       "creationDate":  "2026-11-03T13:18:32+0000",
+                       "updateDate":  "2026-11-04T17:02:34+0000",
+                       "type":  "VULNERABILITY",
+                       "scope":  "MAIN",
+                       "quickFixAvailable":  false,
+                       "messageFormattings":  [
+
+                                              ],
+                       "codeVariants":  [
+
+                                        ],
+                       "cleanCodeAttribute":  "CONVENTIONAL",
+                       "cleanCodeAttributeCategory":  "CONSISTENT",
+                       "impacts":  [
+                                       {
+                                           "softwareQuality":  "SECURITY",
+                                           "severity":  "MEDIUM"
+                                       }
+                                   ],
+                       "issueStatus":  "OPEN",
+                       "prioritizedRule":  false,
+                       "fromSonarQubeUpdate":  false,
+                       "internalTags":  [
+
+                                        ],
+                       "linkedTicketStatus":  "NOT_LINKED"
+                   }
+               ],
+    "total":  3
+}

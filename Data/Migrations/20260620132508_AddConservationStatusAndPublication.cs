@@ -11,6 +11,8 @@ namespace BioGamaEcuador.Data.Migrations
     /// <inheritdoc />
     public partial class AddConservationStatusAndPublication : Migration
     {
+        private static readonly string[] IdCodeCreatedAtDeletedAtDescriptionIsActiveNameUpdatedAtColumns = new[] { "Id", "Code", "CreatedAt", "DeletedAt", "Description", "IsActive", "Name", "UpdatedAt" };
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -41,7 +43,7 @@ namespace BioGamaEcuador.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "ConservationStatuses",
-                columns: new[] { "Id", "Code", "CreatedAt", "DeletedAt", "Description", "IsActive", "Name", "UpdatedAt" },
+                columns: IdCodeCreatedAtDeletedAtDescriptionIsActiveNameUpdatedAtColumns,
                 values: new object[,]
                 {
                     { 1, "EX", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), null, "No quedan individuos vivos conocidos.", true, "Extinta", null },

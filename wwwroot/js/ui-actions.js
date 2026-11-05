@@ -1,5 +1,17 @@
 (function () {
     'use strict';
+    function setCourseImageFallback(image, failed) {
+        if (image?.matches?.('img[data-course-image]')) image.hidden = failed;
+    }
+    document.addEventListener('error', function (event) {
+        setCourseImageFallback(event.target, true);
+    }, true);
+    document.addEventListener('load', function (event) {
+        setCourseImageFallback(event.target, false);
+    }, true);
+    document.querySelectorAll('img[data-course-image]').forEach(function (image) {
+        if (image.complete && image.naturalWidth === 0) setCourseImageFallback(image, true);
+    });
     document.addEventListener('click', function (event) {
         const button = event.target.closest('[data-quantity-step], [data-print], [data-my-orders], [data-analysis-type], [data-copy-response]');
         if (!button) return;

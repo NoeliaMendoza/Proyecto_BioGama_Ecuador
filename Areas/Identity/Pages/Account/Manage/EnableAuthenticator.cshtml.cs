@@ -136,7 +136,7 @@ namespace BioGamaEcuador.Areas.Identity.Pages.Account.Manage
 
             await _userManager.SetTwoFactorEnabledAsync(user, true);
             var userId = await _userManager.GetUserIdAsync(user);
-            _logger.LogInformation("User with ID '{UserId}' has enabled 2FA with an authenticator app.", userId);
+            BioGamaEcuador.Services.LogEvents.AuthenticatorEnabled(_logger,userId);
             var email = await _userManager.GetEmailAsync(user);
             if (email != null) await _bioGamaEmail.SendMfaActivatedAsync(email);
             await _audit.LogMfaChangeAsync(userId, true, HttpContext.Connection.RemoteIpAddress?.ToString());
@@ -177,7 +177,7 @@ namespace BioGamaEcuador.Areas.Identity.Pages.Account.Manage
             QrCodeBase64 = Convert.ToBase64String(qrBytes);
         }
 
-        private string FormatKey(string unformattedKey)
+        private static string FormatKey(string unformattedKey)
         {
             var result = new StringBuilder();
             int currentPosition = 0;

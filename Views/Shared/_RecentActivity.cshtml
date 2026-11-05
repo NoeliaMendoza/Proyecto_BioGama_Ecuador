@@ -1,0 +1,41 @@
+@model IReadOnlyCollection<BioGamaEcuador.Models.Record>
+    <div class="app-card table-card">
+        <div class="app-card-header">
+            <h6><i class="bi bi-clock-history me-2"></i>Actividad reciente</h6>
+            <a asp-controller="Records" asp-action="Index" class="btn btn-outline-primary btn-sm">Ver todos</a>
+        </div>
+        <div class="table-responsive">
+            <table class="table app-table">
+                <thead>
+                    <tr>
+                        <th>Especie</th>
+                        <th>Investigador</th>
+                        <th>Ubicación</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="4">
+                                <div class="empty-state py-4">
+                                    <i class="bi bi-inbox"></i>
+                                    <p class="mb-0">No hay registros recientes</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    @foreach (var r in Model)
+                    {
+                        <tr>
+                            <td class="fw-medium">@r.Species?.CommonName</td>
+                            <td>@r.Researcher?.Name</td>
+                            <td>@r.Location?.PlaceName</td>
+                            <td>@r.DiscoveryDate.ToString("dd/MM/yyyy")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>

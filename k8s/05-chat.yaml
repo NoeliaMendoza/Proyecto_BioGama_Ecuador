@@ -1,0 +1,117 @@
+# Requiere Secret biogama-chat, clave signing_key, compartido con la web.
+apiVersion: v1
+kind: Service
+metadata:
+  name: biogama-chat
+  namespace: biogama
+spec:
+  type: NodePort
+  selector:
+    app: biogama-chat
+  ports:
+    - port: 3000
+      targetPort: 3000
+      nodePort: 30082
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: biogama-chat
+  namespace: biogama
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: biogama-chat
+  template:
+    metadata:
+      labels:
+        app: biogama-chat
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: chat
+          image: biogama-chat:k8s-v2
+          imagePullPolicy: Never
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          ports:
+            - containerPort: 3000
+          env:
+            - name: CHAT_SIGNING_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: biogama-chat
+                  key: signing_key
+            - name: CHAT_ALLOWED_ORIGINS
+              value: https://localhost:30080
+            - name: TLS_PFX_FILE
+              value: /tls/biogama.pfx
+            - name: TLS_PFX_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: biogama-tls
+                  key: password
+            - name: REDIS_URL
+              value: redis://redis:6379
+            - name: PGHOST
+              value: db
+            - name: PGDATABASE
+              value: biogama_ecuador
+            - name: PGUSER
+              value: biogama_user
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: biogama-db
+                  key: db_password
+          resources:
+            requests:
+              cpu: 100m
+              memory: 96Mi
+              ephemeral-storage: 50Mi
+            limits:
+              cpu: "1"
+              memory: 256Mi
+              ephemeral-storage: 256Mi
+          startupProbe:
+            httpGet:
+              scheme: HTTPS
+              path: /health
+              port: 3000
+            failureThreshold: 30
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              scheme: HTTPS
+              path: /health/ready
+              port: 3000
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              scheme: HTTPS
+              path: /health
+              port: 3000
+            periodSeconds: 10
+          volumeMounts:
+            - name: tls
+              mountPath: /tls
+              readOnly: true
+      volumes:
+        - name: tls
+          secret:
+            secretName: biogama-tls
+            defaultMode: 0440
+            items:
+              - key: biogama.pfx
+                path: biogama.pfx

@@ -100,7 +100,7 @@ namespace BioGamaEcuador.Areas.Identity.Pages.Account.Manage
 
             await _signInManager.SignOutAsync();
 
-            _logger.LogInformation("User with ID '{UserId}' deleted themselves.", userId);
+            BioGamaEcuador.Services.LogEvents.AccountDeleted(_logger,userId);
             await _audit.LogAsync("UserDeleted", "User", userId, null, null, userId, HttpContext.Connection.RemoteIpAddress?.ToString());
 
             return Redirect("~/");

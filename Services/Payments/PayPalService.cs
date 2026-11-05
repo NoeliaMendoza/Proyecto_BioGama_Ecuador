@@ -26,11 +26,13 @@ namespace BioGamaEcuador.Services.Payments
     {
         private readonly HttpClient _httpClient;
         private readonly PayPalSettings _settings;
+        private readonly ILogger<PayPalService> _logger;
 
-        public PayPalService(HttpClient httpClient, IOptions<PayPalSettings> options)
+        public PayPalService(HttpClient httpClient, IOptions<PayPalSettings> options, ILogger<PayPalService> logger)
         {
             _httpClient = httpClient;
             _settings = options.Value;
+            _logger = logger;
         }
 
         public async Task<PayPalOrderResult> CreateOrderAsync(decimal total, string reference, string? returnUrl = null, string? cancelUrl = null)
@@ -69,12 +71,12 @@ namespace BioGamaEcuador.Services.Payments
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
                 request.Content = JsonContent.Create(payload);
 
-                var response = await _httpClient.SendAsync(request);
+                using var response = await _httpClient.SendAsync(request);
                 var content = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new InvalidOperationException($"PayPal devolvió error al crear orden: {content}");
+                    throw new InvalidOperationException("PayPal no pudo crear la orden.");
                 }
 
                 using var document = JsonDocument.Parse(content);
@@ -103,26 +105,22 @@ namespace BioGamaEcuador.Services.Payments
             }
             catch (Exception ex)
             {
-                // Fallback para pruebas si no hay credenciales configuradas
-                var mockOrderId = "PAYPAL-MOCK-" + Guid.NewGuid().ToString("N")[..8].ToUpper();
+                BioGamaEcuador.Services.LogEvents.PayPalRequestFailed(_logger, ex);
                 return new PayPalOrderResult
                 {
-                    OrderId = mockOrderId,
-                    ApprovalUrl = $"{_settings.ReturnUrl}?token={mockOrderId}&mock=true",
-                    RawResponse = $"{{\"mock\": true, \"error\": \"{ex.Message}\"}}"
+                    RawResponse = "{\"status\":\"UNAVAILABLE\"}"
                 };
             }
         }
 
         public async Task<PayPalCaptureResult> CaptureOrderAsync(string orderId)
         {
-            if (orderId.StartsWith("PAYPAL-MOCK-"))
+            if (string.IsNullOrWhiteSpace(orderId) || orderId.StartsWith("PAYPAL-MOCK-", StringComparison.Ordinal))
             {
                 return new PayPalCaptureResult
                 {
-                    Status = "COMPLETED",
-                    CaptureId = "CAP-" + Guid.NewGuid().ToString("N")[..8].ToUpper(),
-                    RawResponse = "{\"status\": \"COMPLETED\", \"mock\": true}"
+                    Status = "REJECTED",
+                    RawResponse = "{\"status\":\"REJECTED\"}"
                 };
             }
 
@@ -130,16 +128,16 @@ namespace BioGamaEcuador.Services.Payments
             {
                 var accessToken = await GetAccessTokenAsync();
 
-                using var request = new HttpRequestMessage(HttpMethod.Post, $"{_settings.BaseUrl}/v2/checkout/orders/{orderId}/capture");
+                using var request = new HttpRequestMessage(HttpMethod.Post, $"{_settings.BaseUrl}/v2/checkout/orders/{Uri.EscapeDataString(orderId)}/capture");
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
                 request.Content = new StringContent("{}", Encoding.UTF8, "application/json");
 
-                var response = await _httpClient.SendAsync(request);
+                using var response = await _httpClient.SendAsync(request);
                 var content = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new InvalidOperationException($"PayPal devolvió error al capturar: {content}");
+                    throw new InvalidOperationException("PayPal no pudo confirmar la captura.");
                 }
 
                 using var document = JsonDocument.Parse(content);
@@ -164,6 +162,9 @@ namespace BioGamaEcuador.Services.Payments
                     }
                 }
 
+                if (status == "COMPLETED" && string.IsNullOrWhiteSpace(captureId))
+                    throw new InvalidOperationException("PayPal no devolvio identificador de captura.");
+
                 return new PayPalCaptureResult
                 {
                     Status = status,
@@ -171,19 +172,21 @@ namespace BioGamaEcuador.Services.Payments
                     RawResponse = content
                 };
             }
-            catch
+            catch (Exception ex)
             {
+                BioGamaEcuador.Services.LogEvents.PayPalRequestFailed(_logger, ex);
                 return new PayPalCaptureResult
                 {
-                    Status = "COMPLETED",
-                    CaptureId = "CAP-" + Guid.NewGuid().ToString("N")[..8].ToUpper(),
-                    RawResponse = "{\"status\": \"COMPLETED\", \"fallback\": true}"
+                    Status = "UNAVAILABLE",
+                    RawResponse = "{\"status\":\"UNAVAILABLE\"}"
                 };
             }
         }
 
         private async Task<string> GetAccessTokenAsync()
         {
+            if (string.IsNullOrWhiteSpace(_settings.ClientId) || string.IsNullOrWhiteSpace(_settings.ClientSecret))
+                throw new InvalidOperationException("PayPal no esta configurado.");
             var credentials = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_settings.ClientId}:{_settings.ClientSecret}"));
 
             using var request = new HttpRequestMessage(HttpMethod.Post, $"{_settings.BaseUrl}/v1/oauth2/token");
@@ -194,12 +197,12 @@ namespace BioGamaEcuador.Services.Payments
                 { "grant_type", "client_credentials" }
             });
 
-            var response = await _httpClient.SendAsync(request);
+            using var response = await _httpClient.SendAsync(request);
             var content = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new InvalidOperationException($"No se pudo obtener token de PayPal: {content}");
+                throw new InvalidOperationException("No se pudo autenticar la solicitud a PayPal.");
             }
 
             using var document = JsonDocument.Parse(content);

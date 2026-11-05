@@ -3,7 +3,7 @@
 @using Microsoft.EntityFrameworkCore
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
-@inject BioGamaEcuador.Data.AppDbContext DbContext
+@inject BioGamaEcuador.Services.CartSummary CartSummary
 
 @{
     var title = ViewData["Title"]?.ToString() ?? "BioGama Ecuador";
@@ -11,14 +11,7 @@
     var initials = string.Join("", userName.Split('@', ' ').Where(s => s.Length > 0).Take(2).Select(s => char.ToUpper(s[0])));
     if (initials.Length == 0) initials = "U";
     var userId = UserManager.GetUserId(User);
-    var cartCount = 0;
-    if (userId != null)
-    {
-        cartCount = await DbContext.Database.SqlQueryRaw<int>(
-            "SELECT COALESCE(SUM(od.\"Quantity\"), 0) AS \"Value\" FROM \"OrderDetails\" od INNER JOIN \"Orders\" o ON o.\"Id\" = od.\"OrderId\" WHERE o.\"UserId\" = {0} AND o.\"Status\" = 'Pending'",
-            userId
-        ).FirstOrDefaultAsync();
-    }
+    var cartCount = await CartSummary.CountAsync(userId);
 }
 
 <header class="app-topbar">
@@ -27,7 +20,7 @@
             <i class="bi bi-list"></i>
         </button>
         <div>
-            <h1 class="page-header-title mb-0" style="font-size: var(--font-size-lg);">@title</h1>
+            <h1 class="topbar-title-size page-header-title mb-0" >@title</h1>
         </div>
     </div>
 
@@ -38,11 +31,11 @@
                 <i class="bi bi-cart3"></i>
                 @if (cartCount > 0)
                 {
-                    <span class="badge bg-primary rounded-pill position-absolute top-0 start-100 translate-middle" style="font-size:10px;min-width:18px;">@cartCount</span>
+                    <span class="cart-count-size badge bg-primary rounded-pill position-absolute top-0 start-100 translate-middle" >@cartCount</span>
                 }
             </a>
 
-            
+
             <div class="dropdown">
                 <a class="topbar-user dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <div class="topbar-avatar">@initials</div>

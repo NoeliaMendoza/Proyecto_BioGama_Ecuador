@@ -10,6 +10,34 @@ Repositorio: [NoeliaMendoza/P2_Proyecto_BioGama_Ecuador](https://github.com/Noel
 
 ## Contenido
 
+**Estado del laboratorio actualizado al 4 de noviembre:** web `k8s-v20` en
+`https://localhost:30080`, chat Socket.IO `k8s-v2` en el puerto HTTPS 30082 y
+Ollama 0.40.14 con gemma2:2b como servicio interno. Las dos réplicas web comparten
+el servicio de IA. Consultar [configuración y evidencia de IA](tests/security/ollama-hardening-20261104.md),
+[corrección CSP](tests/security/csp-hardening-20261104.md) y
+[cookies HTTPS/HSTS](tests/security/cookies-hsts-20261104.md).
+Los comandos HTTP y versiones anteriores que siguen documentan las corridas
+históricas. Los manifiestos actuales usan HTTPS para la web y el chat.
+
+Se recuperó el respaldo completo de biodiversidad y ventas, junto con los dos
+archivos de especies adicionales, conservando las credenciales actuales y una
+copia de la base anterior. Consultar [restauración y conteos verificados](tests/database/restauracion-20261104.md).
+El catálogo distingue cursos finalizados, en curso y con cupos agotados; permite
+consultar sus detalles y recupera las imágenes del respaldo con una alternativa
+visual para enlaces fallidos. Ver [corrección del catálogo](tests/browser/catalogo-cursos-20261104.md).
+Las 35 fotografías originales cuentan ahora con copias locales y las hojas de
+estilo se versionan individualmente para evitar conservar disposiciones
+anteriores en caché. Ver [verificación de imágenes y capas](tests/browser/imagenes-locales-20261104.md).
+
+**Actualización del 4 de noviembre: chat privado visitante–administrador.**
+Se incorpora un servicio Node.js + Socket.IO, adaptado del chat de la Tarea 2,
+con autenticación firmada por BioGama, historial en PostgreSQL y eventos entre
+dos réplicas mediante Redis. Acceso en `/Chat`. Consultar la
+[guía del servicio](chat-service/README.md) para configuración, seguridad,
+pruebas y despliegue de la web v11 y el chat v1 (NodePort 30082).
+Los resultados históricos de rendimiento, SonarQube y ZAP que siguen en este
+documento pertenecen a las versiones indicadas y no certifican el nuevo chat.
+
 1. [Objetivo y estado actual](#objetivo-y-estado-actual)
 2. [Funciones y tecnologías](#funciones-y-tecnologías)
 3. [Arquitectura del laboratorio](#arquitectura-del-laboratorio)
@@ -544,6 +572,17 @@ El jitter mide variación, no la latencia absoluta introducida. El throughput en
 Evidencias y análisis: [tests/network](tests/network/analisis.md).
 
 ## Calidad con SonarQube
+
+Actualización del 4 de noviembre: la exportación
+[`20261104-183125-cbad05`](evidencias/20261104-183125-cbad05/sonarqube/quality-gate.json)
+confirma Gate aprobado, dos hallazgos abiertos, duplicación global del 1,6 % y
+cobertura global del 41,6 %. Los cambios posteriores aún requieren otro análisis.
+Consultar [la refactorización de componentes](tests/quality/duplication-components-20261104.md)
+y [la revisión del permiso del laboratorio](tests/network/revision-permisos.md).
+La medición actual excluye únicamente las migraciones generadas de la detección
+de duplicados (`Data/Migrations/**/*.cs` y `Migrations/**/*.cs`); siguen incluidas
+en seguridad y calidad. Por ello, la reducción respecto a los resultados
+históricos de abajo también incluye un cambio de alcance de CPD.
 
 ### Ejecución y exportación
 

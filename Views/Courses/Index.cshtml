@@ -21,18 +21,18 @@
             <form method="get" asp-controller="Courses" asp-action="Index">
                 <div class="row g-2 align-items-end">
                     <div class="col-12 col-md-4">
-                        <label class="form-label">Buscar</label>
+                        <label class="form-label" for="courses-busqueda">Buscar</label>
                         <div class="input-group">
                             <span class="input-group-text bg-white border-end-0">
                                 <i class="bi bi-search text-muted"></i>
                             </span>
-                            <input type="text" name="busqueda" class="form-control border-start-0 ps-0"
+                            <input id="courses-busqueda" type="text" name="busqueda" class="form-control border-start-0 ps-0"
                                    placeholder="Título, instructor, temática…" value="@ViewBag.Busqueda" />
                         </div>
                     </div>
                     <div class="col-6 col-md-3">
-                        <label class="form-label">Modalidad</label>
-                        <select name="modalidad" class="form-select">
+                        <label class="form-label" for="courses-modalidad">Modalidad</label>
+                        <select id="courses-modalidad" name="modalidad" class="form-select">
                             <option value="">Todas</option>
                             <option value="Presencial" selected="@(ViewBag.ModalidadFiltro == "Presencial")">Presencial</option>
                             <option value="Virtual" selected="@(ViewBag.ModalidadFiltro == "Virtual")">Virtual</option>
@@ -40,12 +40,13 @@
                         </select>
                     </div>
                     <div class="col-6 col-md-2">
-                        <label class="form-label">Estado</label>
-                        <select name="estado" class="form-select">
+                        <label class="form-label" for="courses-estado">Estado</label>
+                        <select id="courses-estado" name="estado" class="form-select">
                             <option value="">Todos</option>
                             <option value="abierto" selected="@(ViewBag.EstadoFiltro == "abierto")">Abierto (cupos)</option>
                             <option value="agotado" selected="@(ViewBag.EstadoFiltro == "agotado")">Agotado</option>
                             <option value="finalizado" selected="@(ViewBag.EstadoFiltro == "finalizado")">Finalizado</option>
+                            <option value="en-curso" selected="@(ViewBag.EstadoFiltro == "en-curso")">En curso</option>
                         </select>
                     </div>
                     <div class="col-6 col-md-3 d-flex gap-2">
@@ -75,30 +76,38 @@
         <div class="course-grid">
             @foreach (var c in Model)
             {
-                var disponible = c.AvailableSeats > 0 && c.IsActive && c.StartDate > DateTime.UtcNow;
-                var agotado = c.AvailableSeats == 0 || c.StartDate <= DateTime.UtcNow;
+                var now = DateTime.UtcNow;
+                var finalizado = c.EndDate.Date < now.Date;
+                var iniciado = c.StartDate <= now && !finalizado;
+                var disponible = c.AvailableSeats > 0 && c.IsActive && c.StartDate > now;
+                var agotado = !finalizado && !iniciado && c.AvailableSeats <= 0;
 
-                <article class="course-card @(agotado ? "course-card--sold-out" : "")">
+                <article class="course-card">
                     <div class="course-card-image">
+                        <div class="course-card-image-placeholder" aria-hidden="true">
+                            <i class="bi bi-mortarboard"></i>
+                            <span>@c.Modality</span>
+                        </div>
                         @if (!string.IsNullOrWhiteSpace(c.ImageUrl))
                         {
-                            <img src="@c.ImageUrl" alt="@c.Title" loading="lazy" />
-                        }
-                        else
-                        {
-                            <div class="course-card-image-placeholder">
-                                <i class="bi bi-mortarboard"></i>
-                                <span>@c.Modality</span>
-                            </div>
+                            <img asp-course-image="@c.ImageUrl" alt="@c.Title" loading="lazy" data-course-image />
                         }
                         <div class="course-card-status">
-                            @if (agotado)
+                            @if (finalizado)
+                            {
+                                <span class="badge badge-soft-secondary">Finalizado</span>
+                            }
+                            else if (iniciado)
+                            {
+                                <span class="badge badge-soft-primary">En curso</span>
+                            }
+                            else if (agotado)
                             {
                                 <span class="badge badge-soft-danger">Agotado</span>
                             }
                             else if (!disponible)
                             {
-                                <span class="badge badge-soft-secondary">Finalizado</span>
+                                <span class="badge badge-soft-secondary">No disponible</span>
                             }
                             else
                             {
@@ -147,7 +156,7 @@
                         <div class="course-card-footer">
                             <span class="course-card-price">$@c.Price.ToString("N2", new System.Globalization.CultureInfo("es-EC")) USD</span>
                             <a asp-controller="Courses" asp-action="Details" asp-route-id="@c.Id"
-                               class="btn btn-primary btn-sm @(c.AvailableSeats > 0 && c.IsActive && c.StartDate > DateTime.UtcNow ? "" : "disabled")">
+                               class="btn btn-primary btn-sm">
                                 <i class="bi bi-eye me-1"></i>Ver detalle
                             </a>
                         </div>

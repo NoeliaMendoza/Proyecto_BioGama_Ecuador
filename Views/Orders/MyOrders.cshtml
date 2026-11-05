@@ -24,7 +24,7 @@
 {
     <div class="app-card">
         <div class="empty-state">
-            <i class="bi bi-receipt" style="font-size:3rem;color:var(--color-muted)"></i>
+            <i class="empty-state-icon bi bi-receipt" ></i>
             <h5 class="mt-3">No tienes compras aun</h5>
             <p class="mb-3">Cuando realices tu primera compra o te inscribas en un curso, aparecera aqui.</p>
             <div class="d-flex gap-2 justify-content-center">
@@ -139,7 +139,7 @@ else
                                         })</span>
                                     @if (o.Payment != null)
                                     {
-                                        <span class="badge @(
+                                        <span class="text-size-10 badge @(
                                             o.Payment.Status switch
                                             {
                                                 "Approved" => "badge-soft-success",
@@ -149,7 +149,7 @@ else
                                                 "Expired" => "badge-soft-danger",
                                                 "Refunded" => "badge-soft-danger",
                                                 _ => "badge-soft-info"
-                                            })" style="font-size:10px">Pago: @(o.Payment.Status switch
+                                            })" >Pago: @(o.Payment.Status switch
                                             {
                                                 "Approved" => "Aprobado",
                                                 "Pending" => "Pendiente",

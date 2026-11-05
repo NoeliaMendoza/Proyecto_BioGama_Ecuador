@@ -1,0 +1,28 @@
+{
+    "component":  {
+                      "key":  "biogama-ecuador",
+                      "name":  "BioGama Ecuador",
+                      "qualifier":  "TRK",
+                      "measures":  [
+                                       {
+                                           "metric":  "coverage",
+                                           "value":  "41.6",
+                                           "bestValue":  false
+                                       },
+                                       {
+                                           "metric":  "duplicated_lines_density",
+                                           "value":  "1.6",
+                                           "bestValue":  false
+                                       },
+                                       {
+                                           "metric":  "ncloc",
+                                           "value":  "21624"
+                                       },
+                                       {
+                                           "metric":  "violations",
+                                           "value":  "4",
+                                           "bestValue":  false
+                                       }
+                                   ]
+                  }
+}

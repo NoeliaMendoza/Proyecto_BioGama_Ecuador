@@ -1,0 +1,27 @@
+﻿{
+    "checkedAtUtc":  "2026-11-05T03:47:06.4309868Z",
+    "google":  {
+                   "configured":  true,
+                   "browserLoginPending":  true
+               },
+    "payphone":  {
+                     "configured":  true,
+                     "transactionTested":  false
+                 },
+    "paypal":  {
+                   "sandbox":  true,
+                   "httpStatus":  200,
+                   "authenticated":  true,
+                   "transactionTested":  false
+               },
+    "smtp":  {
+                 "authenticated":  true,
+                 "tls":  true,
+                 "mailSent":  false
+             },
+    "deployment":  {
+                       "version":  "k8s-v18",
+                       "configuredReplicas":  2,
+                       "secret":  "biogama-integrations"
+                   }
+}

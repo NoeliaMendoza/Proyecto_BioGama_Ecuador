@@ -1,0 +1,105 @@
+{
+  "checkedAtUtc": "2026-11-05T04:25:53.6083097Z",
+  "applicationVersion": "k8s-v18",
+  "databaseEngine": "PostgreSQL 16",
+  "backupSourceVersion": "PostgreSQL 18.4",
+  "backupSha256": "c6639a7fba9c624b53b31c6a31be6d2dea0fa6722054341e6903ad558c971d5d",
+  "sourceRows": {
+    "\"AspNetRoleClaims\"": 0,
+    "\"AspNetRoles\"": 3,
+    "\"AspNetUserClaims\"": 0,
+    "\"AspNetUserLogins\"": 0,
+    "\"AspNetUserRoles\"": 3,
+    "\"AspNetUserTokens\"": 5,
+    "\"AspNetUsers\"": 7,
+    "\"ConservationStatuses\"": 7,
+    "\"Courses\"": 35,
+    "\"Enrollments\"": 13,
+    "\"Families\"": 72,
+    "\"InventoryMovements\"": 62,
+    "\"Locations\"": 10004,
+    "\"NaturalReserves\"": 402,
+    "\"OrderDetails\"": 15,
+    "\"Orders\"": 9,
+    "\"Payments\"": 8,
+    "\"PendingEmails\"": 0,
+    "\"PhysicalProducts\"": 48,
+    "\"PublicationSpecies\"": 0,
+    "\"Publications\"": 500,
+    "\"Records\"": 966700,
+    "\"Researchers\"": 2001,
+    "\"Species\"": 20083,
+    "\"Sucursales\"": 0,
+    "\"__EFMigrationsHistory\"": 8,
+    "amanit_id": 1,
+    "bolet_id": 1,
+    "hymeno_id": 1,
+    "marasm_id": 1,
+    "pleuro_id": 1,
+    "polypor_id": 1,
+    "russul_id": 1
+  },
+  "finalCounts": {
+    "database": "biogama_ecuador",
+    "species": 20183,
+    "records": 966700,
+    "researchers": 2001,
+    "families": 73,
+    "reserves": 402,
+    "locations": 10004,
+    "publications": 500,
+    "courses": 35,
+    "products": 48,
+    "users": 7,
+    "orders": 9,
+    "payments": 8,
+    "enrollments": 13,
+    "orderDetails": 15,
+    "inventoryMovements": 67,
+    "pendingEmails": 0,
+    "migrations": 9,
+    "chatMessages": 0,
+    "extraSpecies": 100,
+    "classificationPending": 3
+  },
+  "verification": {
+    "unvalidatedConstraints": 0,
+    "currentCredentialsPreserved": 4,
+    "currentSnapshotUnchanged": true,
+    "reauthenticationRequired": true,
+    "webReplicas": 2,
+    "chatReplicas": 2
+  },
+  "httpChecks": [
+    {
+      "path": "/api/info",
+      "status": 200,
+      "bytes": 132
+    },
+    {
+      "path": "/",
+      "status": 200,
+      "bytes": 14373
+    },
+    {
+      "path": "/Products",
+      "status": 200,
+      "bytes": 35725
+    },
+    {
+      "path": "/Products/Availability",
+      "status": 200,
+      "bytes": 923
+    },
+    {
+      "path": "/Courses",
+      "status": 200,
+      "bytes": 41321
+    },
+    {
+      "path": "/Identity/Account/Login",
+      "status": 200,
+      "bytes": 6102
+    }
+  ]
+}

@@ -16,7 +16,7 @@
 
 @if (User.IsInRole("Administrador") && Model.Status == "Pending")
 {
-    <form asp-action="MarkAsPaid" asp-route-id="@Model.Id" method="post" style="display:inline">
+    <form asp-action="MarkAsPaid" asp-route-id="@Model.Id" method="post" class="inline-form">
         @Html.AntiForgeryToken()
         <button class="btn btn-warning">Marcar como pagado para demostracion</button>
     </form>

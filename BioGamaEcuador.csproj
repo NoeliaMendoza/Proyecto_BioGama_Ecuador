@@ -4,6 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <DefaultItemExcludes>$(DefaultItemExcludes);chat-service\**;Tarea2_Mendoza_Noelia\**</DefaultItemExcludes>
     <UserSecretsId>77ba4a6d-f380-4a78-a21f-58147bcb10c0</UserSecretsId>
   </PropertyGroup>
 
@@ -33,6 +34,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Data/Seeders/sales-catalog.json" />
+    <Content Remove="Data/Seeders/sales-catalog.json" />
     <Compile Remove="tests\**\*.cs" />
     <Content Remove="tests\**\*;evidencias\**\*" />
     <None Remove="tests\**\*;evidencias\**\*" />

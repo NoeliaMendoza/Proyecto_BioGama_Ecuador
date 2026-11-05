@@ -7,13 +7,16 @@ namespace BioGamaEcuador.Services.Ollama
 {
     public class OllamaService : IOllamaService
     {
+        private static readonly JsonSerializerOptions ResponseJsonOptions = new() { PropertyNameCaseInsensitive = true };
         private readonly HttpClient _httpClient;
         private readonly OllamaSettings _settings;
+        private readonly ILogger<OllamaService> _logger;
 
-        public OllamaService(HttpClient httpClient, IOptions<OllamaSettings> options)
+        public OllamaService(HttpClient httpClient, IOptions<OllamaSettings> options, ILogger<OllamaService> logger)
         {
             _httpClient = httpClient;
             _settings = options.Value;
+            _logger = logger;
             
             if (_httpClient.BaseAddress == null)
             {
@@ -22,7 +25,7 @@ namespace BioGamaEcuador.Services.Ollama
             _httpClient.Timeout = TimeSpan.FromSeconds(_settings.TimeoutSeconds);
         }
 
-        public async Task<OllamaResponseDto> GenerateResponseAsync(string prompt, string? systemPrompt = null)
+        public async Task<OllamaResponseDto> GenerateResponseAsync(string prompt, string? systemPrompt = null, CancellationToken cancellationToken = default)
         {
             var requestBody = new OllamaRequestDto
             {
@@ -34,41 +37,41 @@ namespace BioGamaEcuador.Services.Ollama
 
             try
             {
-                var response = await _httpClient.PostAsJsonAsync("api/generate", requestBody);
-                var responseContent = await response.Content.ReadAsStringAsync();
+                using var response = await _httpClient.PostAsJsonAsync("api/generate", requestBody, cancellationToken);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    return new OllamaResponseDto
-                    {
-                        success = false,
-                        error = $"Ollama respondió con código {(int)response.StatusCode}: {responseContent}"
-                    };
+                    BioGamaEcuador.Services.LogEvents.OllamaRejected(_logger, (int)response.StatusCode);
+                    return Unavailable();
                 }
 
-                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                var result = JsonSerializer.Deserialize<OllamaResponseDto>(responseContent, options);
+                var result = await response.Content.ReadFromJsonAsync<OllamaResponseDto>(ResponseJsonOptions, cancellationToken);
 
-                if (result == null)
+                if (result == null || !result.done || string.IsNullOrWhiteSpace(result.response))
                 {
-                    return new OllamaResponseDto
-                    {
-                        success = false,
-                        error = "No se pudo deserializar la respuesta obtenida de Ollama."
-                    };
+                    BioGamaEcuador.Services.LogEvents.OllamaInvalidResponse(_logger);
+                    return Unavailable();
                 }
 
                 result.success = true;
+                result.error = null;
                 return result;
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
             }
             catch (Exception ex)
             {
-                return new OllamaResponseDto
-                {
-                    success = false,
-                    error = $"Error al comunicarse con Ollama ({_settings.BaseUrl}): {ex.Message}. Asegúrese de que Ollama esté ejecutándose."
-                };
+                BioGamaEcuador.Services.LogEvents.OllamaUnavailable(_logger, ex);
+                return Unavailable();
             }
         }
+
+        private static OllamaResponseDto Unavailable() => new()
+        {
+            success = false,
+            error = BioGamaEcuador.Services.AiAvailability.UnavailableMessage
+        };
     }
 }

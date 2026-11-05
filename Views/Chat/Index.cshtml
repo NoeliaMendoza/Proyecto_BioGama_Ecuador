@@ -1,0 +1,51 @@
+@{
+    ViewData["Title"] = "Atención y colaboración";
+    bool administrator = ViewBag.IsChatAdmin;
+    string? chatUrl = ViewBag.ChatUrl;
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/support-chat.css" asp-append-version="true" />
+}
+<h1>Atención y colaboración</h1>
+<p>Consulta sobre productos o cursos, o cuéntanos cómo te gustaría colaborar como investigador.</p>
+@if (chatUrl is null)
+{
+    <div class="alert alert-warning" role="status">El chat todavía no está habilitado. Inténtalo más tarde.</div>
+}
+else
+{
+    <section id="support-chat" class="support-chat" data-service-url="@chatUrl" data-admin="@administrator.ToString().ToLowerInvariant()">
+        @if (administrator)
+        {
+            <aside class="support-inbox" aria-label="Conversaciones de visitantes">
+                <h2>Conversaciones</h2>
+                <p class="small">Las 100 conversaciones con actividad más reciente.</p>
+                <button id="chat-refresh" class="btn btn-outline-secondary btn-sm" type="button">Actualizar bandeja</button>
+                <div id="chat-threads"></div>
+            </aside>
+        }
+        <div class="support-conversation">
+            <header><h2 id="chat-title">@(administrator ? "Selecciona una conversación" : "Conversación con el equipo BioGama")</h2>
+                <p id="chat-status" role="status">Conectando…</p>
+            </header>
+            <button id="chat-older" class="btn btn-outline-secondary btn-sm" type="button" hidden>Cargar mensajes anteriores</button>
+            <ol id="chat-messages" class="support-messages" aria-label="Mensajes de la conversación"></ol>
+            <p id="chat-empty">@(administrator ? "Abre una conversación de la bandeja." : "Escribe tu primera consulta. Solo tú y el equipo administrador pueden acceder a esta conversación.")</p>
+            <p id="chat-error" class="text-danger" role="alert"></p>
+            <form id="chat-form">
+                @Html.AntiForgeryToken()
+                <label for="chat-content">Mensaje</label>
+                <textarea id="chat-content" class="form-control" maxlength="2000" rows="3" required disabled aria-describedby="chat-help"></textarea>
+                <p id="chat-help" class="small">Máximo 2000 caracteres. No compartas contraseñas ni datos de pago. Una solicitud de colaboración requiere revisión del administrador.</p>
+                <button id="chat-send" type="submit" class="btn btn-primary" disabled>Enviar mensaje</button>
+            </form>
+        </div>
+    </section>
+}
+@section Scripts {
+    @if (chatUrl is not null)
+    {
+        <script src="~/lib/socket.io/socket.io.min.js" asp-append-version="true"></script>
+        <script src="~/js/support-chat.js" asp-append-version="true"></script>
+    }
+}

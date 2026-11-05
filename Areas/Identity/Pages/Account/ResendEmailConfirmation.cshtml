@@ -1,18 +1,18 @@
-﻿@page
+@page
 @model ResendEmailConfirmationModel
 @{
     ViewData["Title"] = "Reenviar confirmación de correo";
     Layout = "/Views/Shared/_LayoutAuth.cshtml";
 }
 
-<div class="w-100" style="max-width: 400px;">
+<div class="details-width-400 w-100" >
     <div class="mb-4 d-lg-none text-center">
         <div class="stat-card-icon primary mx-auto mb-3"><i class="bi bi-flower1"></i></div>
-        <h2 class="fw-bold" style="color: var(--color-primary);">BioGama Ecuador</h2>
+        <h2 class="color-primary fw-bold" >BioGama Ecuador</h2>
     </div>
     <div class="app-card">
         <div class="app-card-body p-4">
-            <h2 class="fw-bold mb-1" style="font-size: var(--font-size-xl);">Reenviar confirmación</h2>
+            <h2 class="account-title fw-bold mb-1" >Reenviar confirmación</h2>
             <p class="text-muted small mb-4">Ingrese su correo electrónico</p>
             <form method="post">
                 <div asp-validation-summary="All" class="validation-summary-errors" role="alert"></div>

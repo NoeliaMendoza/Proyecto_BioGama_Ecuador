@@ -1,0 +1,101 @@
+{
+  "checkedAtUtc": "2026-11-05T04:38:11.015Z",
+  "version": "k8s-v19",
+  "results": [
+    {
+      "path": "/Courses",
+      "cards": 12,
+      "badges": [
+        "Finalizado",
+        "Finalizado",
+        "Finalizado",
+        "Finalizado",
+        "Finalizado",
+        "Finalizado",
+        "Finalizado",
+        "Finalizado",
+        "Finalizado",
+        "Finalizado",
+        "Finalizado",
+        "Finalizado"
+      ],
+      "disabledDetails": 0,
+      "brokenImages": 0,
+      "violations": []
+    },
+    {
+      "lastRow": {
+        "brokenImages": 0,
+        "violations": []
+      }
+    },
+    {
+      "detail": {
+        "hasDetails": true,
+        "closedLabel": true,
+        "violations": []
+      }
+    },
+    {
+      "path": "/Courses?estado=finalizado",
+      "cards": 12,
+      "badges": [
+        "Finalizado",
+        "Finalizado",
+        "Finalizado",
+        "Finalizado",
+        "Finalizado",
+        "Finalizado",
+        "Finalizado",
+        "Finalizado",
+        "Finalizado",
+        "Finalizado",
+        "Finalizado",
+        "Finalizado"
+      ],
+      "disabledDetails": 0,
+      "brokenImages": 0,
+      "violations": []
+    },
+    {
+      "path": "/Courses?estado=agotado",
+      "cards": 0,
+      "badges": [],
+      "disabledDetails": 0,
+      "brokenImages": 0,
+      "violations": []
+    },
+    {
+      "path": "/Courses?estado=en-curso",
+      "cards": 2,
+      "badges": [
+        "En curso",
+        "En curso"
+      ],
+      "disabledDetails": 0,
+      "brokenImages": 0,
+      "violations": []
+    },
+    {
+      "path": "/Courses?estado=abierto",
+      "cards": 12,
+      "badges": [
+        "25 cupos",
+        "20 cupos",
+        "18 cupos",
+        "25 cupos",
+        "25 cupos",
+        "25 cupos",
+        "18 cupos",
+        "25 cupos",
+        "20 cupos",
+        "15 cupos",
+        "20 cupos",
+        "20 cupos"
+      ],
+      "disabledDetails": 0,
+      "brokenImages": 0,
+      "violations": []
+    }
+  ]
+}
