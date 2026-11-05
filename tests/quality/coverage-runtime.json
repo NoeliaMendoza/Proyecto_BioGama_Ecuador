@@ -1,0 +1,15 @@
+﻿{
+    "platform":  "Linux",
+    "collector":  "coverlet.collector 6.0.4",
+    "activeReport":  "coverage.opencover.xml",
+    "executed":  178,
+    "passed":  178,
+    "mappedFiles":  251,
+    "visitedSequencePoints":  13630,
+    "image":  "biogama-coverage-tests:local",
+    "createdAtUtc":  "2026-11-05T04:52:08.4452827Z",
+    "sourceManifest":  "C:\\Users\\nkmj2\\Desktop\\32820-APLICACIONES DISTRIBUIDAS\\Proyecto_BioGama_Ecuador\\.local\\LinuxCoverage\\231d86eb66864a39b4e2a230c4bfcaf5\\source-manifest.json",
+    "originalReportSha256":  "98457DFF96684D0F8B820466CC552C9B594A0FFCE710E597D20A658AFF0C67B4",
+    "normalizedReportSha256":  "6BCD6C9E1D8A789C73E25D4A4D212B24578DA314C048EB12901B9A0257196C95",
+    "note":  "Cambio de plataforma y recolector respecto a cobertura dinamica Windows; comparar tambien ese alcance."
+}

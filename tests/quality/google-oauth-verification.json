@@ -1,0 +1,9 @@
+{
+  "checkedAtUtc": "2026-11-05T03:55:16.015Z",
+  "host": "accounts.google.com",
+  "path": "/signin/oauth/error",
+  "violations": [],
+  "redirectUriMismatch": true,
+  "invalidClient": false,
+  "completedAccountLogin": false
+}
