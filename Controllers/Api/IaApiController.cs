@@ -35,7 +35,7 @@ namespace BioGamaEcuador.Controllers.Api
         }
 
         /// <summary>
-        /// Endpoint API REST propio para consultar el modelo local Ollama (tinyllama)
+        /// Endpoint API REST propio para consultar el modelo configurado en Ollama.
         /// Ruta: POST /api/ia/generar
         /// </summary>
         [HttpPost("generar")]
@@ -90,14 +90,15 @@ namespace BioGamaEcuador.Controllers.Api
                 });
             }
 
-            var result = await _ollamaService.GenerateResponseAsync(finalPrompt);
+            var result = await _ollamaService.GenerateResponseAsync(finalPrompt, cancellationToken: HttpContext.RequestAborted);
 
             if (!result.success)
             {
-                return StatusCode(500, new IaQueryResponse
+                Response.Headers["Retry-After"] = "30";
+                return StatusCode(StatusCodes.Status503ServiceUnavailable, new IaQueryResponse
                 {
                     Success = false,
-                    Error = result.error
+                    Error = BioGamaEcuador.Services.AiAvailability.UnavailableMessage
                 });
             }
 
