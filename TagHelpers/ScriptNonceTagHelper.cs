@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 namespace BioGamaEcuador.TagHelpers;
 
 [HtmlTargetElement("script")]
+[HtmlTargetElement("style")]
 public sealed class ScriptNonceTagHelper : TagHelper
 {
     [ViewContext, HtmlAttributeNotBound]

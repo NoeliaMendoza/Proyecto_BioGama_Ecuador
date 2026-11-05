@@ -13,28 +13,28 @@
         <div class="row g-4">
             <div class="col-md-3">
                 <div class="card border-0 bg-light p-3 text-center h-100">
-                    <div style="font-size:2rem;"><i class="bi bi-arrow-up text-secondary"></i></div>
+                    <div class="icon-medium"><i class="bi bi-arrow-up text-secondary"></i></div>
                     <div class="small text-muted mt-1">Altitud</div>
                     <div class="fw-bold fs-5">@(Model.Altitude > 0 ? $"{Model.Altitude} m.s.n.m." : "—")</div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card border-0 bg-light p-3 text-center h-100">
-                    <div style="font-size:2rem;"><i class="bi bi-globe text-info"></i></div>
+                    <div class="icon-medium"><i class="bi bi-globe text-info"></i></div>
                     <div class="small text-muted mt-1">Latitud</div>
                     <div class="fw-bold fs-5">@(Model.Latitude != 0 ? $"{Model.Latitude}°" : "—")</div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card border-0 bg-light p-3 text-center h-100">
-                    <div style="font-size:2rem;"><i class="bi bi-globe text-info"></i></div>
+                    <div class="icon-medium"><i class="bi bi-globe text-info"></i></div>
                     <div class="small text-muted mt-1">Longitud</div>
                     <div class="fw-bold fs-5">@(Model.Longitude != 0 ? $"{Model.Longitude}°" : "—")</div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card border-0 bg-light p-3 text-center h-100">
-                    <div style="font-size:2rem;"><i class="bi bi-tree text-success"></i></div>
+                    <div class="icon-medium"><i class="bi bi-tree text-success"></i></div>
                     <div class="small text-muted mt-1">Reserva natural</div>
                     <div class="fw-bold fs-5">@(Model.NaturalReserve?.Name ?? "—")</div>
                 </div>

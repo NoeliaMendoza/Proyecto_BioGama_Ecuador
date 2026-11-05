@@ -25,7 +25,7 @@
                 <i class="fa-solid fa-microchip me-1"></i> Asistente inteligente
             </span>
             <h2>
-                <i class="fa-solid fa-brain me-2" style="color: #16a34a;"></i>Asistente IA de Biodiversidad
+                <i class="color-green fa-solid fa-brain me-2" ></i>Asistente IA de Biodiversidad
             </h2>
             <p>
                 Consulte y genere análisis ecológicos estructurados mediante inteligencia artificial.
@@ -38,7 +38,7 @@
             <div class="ia-card mb-4">
                 <div class="ia-card-header">
                     <h6>
-                        <i class="fa-solid fa-sliders me-2" style="color: #16a34a;"></i>Configuración de Consulta
+                        <i class="color-green fa-solid fa-sliders me-2" ></i>Configuración de Consulta
                     </h6>
                 </div>
                 <div class="card-body p-4">
@@ -60,7 +60,7 @@
 
                         <div class="tab-pane fade show active" id="species-pane" role="tabpanel">
                             <div class="mb-4 position-relative">
-                                <label class="form-label small fw-bold text-secondary">Especie:</label>
+                                <label class="form-label small fw-bold text-secondary" for="speciesInput">Especie:</label>
                                 <input type="text" id="speciesInput" class="form-control ia-select" placeholder="Buscar especie..." autocomplete="off">
                                 <input type="hidden" id="speciesId" value="">
                                 <div id="speciesDropdown" class="ia-autocomplete d-none"></div>
@@ -68,14 +68,14 @@
                             </div>
 
                             <div class="mb-2">
-                                <label class="form-label small fw-bold text-secondary">Acción:</label>
+                                <p class="form-label small fw-bold text-secondary">Acción:</p>
                                 <div class="d-grid gap-2">
                                     <button type="button" class="ia-btn-action d-flex align-items-center justify-content-between" data-analysis-type="ficha">
-                                        <span><i class="fa-solid fa-file-medical me-2" style="color: #16a34a;"></i> Ficha Ecológica</span>
+                                        <span><i class="color-green fa-solid fa-file-medical me-2" ></i> Ficha Ecológica</span>
                                         <i class="fa-solid fa-chevron-right small text-muted"></i>
                                     </button>
                                     <button type="button" class="ia-btn-action d-flex align-items-center justify-content-between" data-analysis-type="conservacion">
-                                        <span><i class="fa-solid fa-shield-halved me-2" style="color: #d97706;"></i> Plan de Conservación</span>
+                                        <span><i class="color-amber fa-solid fa-shield-halved me-2" ></i> Plan de Conservación</span>
                                         <i class="fa-solid fa-chevron-right small text-muted"></i>
                                     </button>
                                 </div>
@@ -84,7 +84,7 @@
 
                         <div class="tab-pane fade" id="custom-pane" role="tabpanel">
                             <div class="mb-3">
-                                <label class="form-label small fw-bold text-secondary">Su consulta:</label>
+                                <label class="form-label small fw-bold text-secondary" for="customPrompt">Su consulta:</label>
                                 <textarea id="customPrompt" class="form-control ia-textarea" rows="4" placeholder="Ej: ¿Cuál es la importancia ecológica del Oso de Anteojos en Ecuador?"></textarea>
                                 <small id="promptError" class="text-danger d-none mt-1"><i class="fa-solid fa-circle-exclamation me-1"></i>Ingrese un texto de consulta.</small>
                             </div>
@@ -116,10 +116,10 @@
                     </button>
                 </div>
 
-                <div class="card-body p-4 d-flex flex-column" id="outputContainer" style="min-height: 440px;">
+                <div class="analysis-output card-body p-4 d-flex flex-column" id="outputContainer" >
 
                     <div id="stateInitial" class="my-auto text-center py-5 text-secondary">
-                        <i class="fa-solid fa-sparkles display-4 mb-3 opacity-25" style="color: #16a34a;"></i>
+                        <i class="color-green fa-solid fa-sparkles display-4 mb-3 opacity-25" ></i>
                         <h6 class="fw-bold text-secondary">Esperando consulta</h6>
                         <p class="small text-muted">
                             Seleccione una especie o escriba una consulta para obtener información detallada.
@@ -127,7 +127,7 @@
                     </div>
 
                     <div id="stateLoading" class="my-auto text-center py-5 d-none">
-                        <div class="spinner-border mb-3" style="width: 2.5rem; height: 2.5rem; color: #16a34a;" role="status">
+                        <div class="analysis-spinner spinner-border mb-3"  role="status">
                             <span class="visually-hidden">Procesando...</span>
                         </div>
                         <h6 class="fw-bold text-dark">Generando respuesta...</h6>

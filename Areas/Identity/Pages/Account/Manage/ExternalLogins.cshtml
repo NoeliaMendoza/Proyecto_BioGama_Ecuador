@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model ExternalLoginsModel
 @{
     ViewData["Title"] = "Administrar inicios de sesión externos";
@@ -7,8 +7,9 @@
 
 @if (Model.CurrentLogins?.Count > 0)
 {
-    <h6 class="fw-semibold mb-3 text-muted text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.04em;">Inicios de sesión registrados</h6>
+    <h6 class="account-section-label fw-semibold mb-3 text-muted text-uppercase" >Inicios de sesión registrados</h6>
     <table class="table">
+        <thead><tr><th scope="col">Proveedor</th><th scope="col">Acciones</th></tr></thead>
         <tbody>
             @foreach (var login in Model.CurrentLogins)
             {
@@ -39,7 +40,7 @@
 }
 @if (Model.OtherLogins?.Count > 0)
 {
-    <h6 class="fw-semibold mb-3 text-muted text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.04em;">Agregar otro proveedor externo</h6>
+    <h6 class="account-section-label fw-semibold mb-3 text-muted text-uppercase" >Agregar otro proveedor externo</h6>
     <hr />
     <form id="link-login-form" asp-page-handler="LinkLogin" method="post" class="form-horizontal">
         <div id="socialLoginList">

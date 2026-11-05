@@ -14,21 +14,7 @@
         <div class="col-md-4 detail-image">
             @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
             {
-                var imageUrl = Model.ImageUrl.Trim();
-                var imageSrc = imageUrl;
-                var isAbsolute = Uri.TryCreate(imageUrl, UriKind.Absolute, out _);
-                if (isAbsolute)
-                {
-                    imageSrc = imageUrl.Contains(" ") ? imageUrl.Replace(" ", "%20") : imageUrl;
-                }
-                else
-                {
-                    if (!imageUrl.StartsWith("~/") && !imageUrl.StartsWith("/"))
-                    {
-                        imageUrl = "~/images/" + imageUrl.TrimStart('/');
-                    }
-                    imageSrc = Url.Content(imageUrl);
-                }
+                var imageSrc = BioGamaEcuador.Services.ImageSource.Resolve(Model.ImageUrl, Url);
                 <img src="@imageSrc" alt="@Model.CommonName" class="img-fluid" />
             }
             else

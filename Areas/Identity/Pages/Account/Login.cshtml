@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model LoginModel
 
 @{
@@ -6,10 +6,10 @@
     Layout = "/Views/Shared/_LayoutAuth.cshtml";
 }
 
-<div class="w-100" style="max-width: 400px;">
+<div class="details-width-400 w-100" >
     <div class="mb-4 d-lg-none text-center">
         <div class="stat-card-icon primary mx-auto mb-3"><i class="bi bi-flower1"></i></div>
-        <h2 class="fw-bold" style="color: var(--color-primary);">BioGama Ecuador</h2>
+        <h2 class="color-primary fw-bold" >BioGama Ecuador</h2>
     </div>
 
     <div class="app-card auth-form-card">
@@ -54,7 +54,7 @@
 
             @if (Model.ExternalLogins?.Count > 0)
             {
-                <div class="mt-4 pt-3" style="border-top:1px solid #dee2e6">
+                <div class="account-providers-border mt-4 pt-3" >
                     <p class="text-center text-muted small mb-3">O accede con</p>
                     <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="d-grid">
                         @foreach (var provider in Model.ExternalLogins)
