@@ -1,0 +1,131 @@
+{
+  "Courses": [
+    {
+      "StartAfterDays": 60,
+      "EndAfterDays": 61,
+      "SpeciesReference": "colibri",
+      "Value": {
+        "Title": "Identificación de Aves del Chocó Andino",
+        "Description": "Taller práctico de 2 días: claves de identificación, vocalizaciones, uso de eBird y guías de campo. Incluye salida de campo opcional.",
+        "Syllabus": "## Día 1 (Teoría)\n- Familias de aves del Chocó\n- Claves morfológicas y vocales\n- Uso de guías y apps (Merlin, eBird)\n\n## Día 2 (Práctica)\n- Salida a Reserva Mashpi/Intillacta\n- Registro de observaciones\n- Subida a plataformas ciencia ciudadana",
+        "Price": 120.0,
+        "TotalSeats": 20,
+        "Modality": "Hibrido",
+        "Venue": "Fundación Jocotoco, Quito + Reserva Mashpi",
+        "Instructor": "Dr. Juan Freile",
+        "InstructorBio": "Ornitólogo, autor de 'Aves del Ecuador', 20 años experiencia",
+        "ImageUrl": "/images/cursos/aves-choco.jpg",
+        "IsActive": true,
+        "RequiresPriorKnowledge": false,
+        "TargetAudience": "Estudiantes, guías, público general",
+        "StartTime": "08:00:00",
+        "EndTime": "16:00:00"
+      }
+    },
+    {
+      "StartAfterDays": 90,
+      "EndAfterDays": 92,
+      "SpeciesReference": "rana",
+      "Value": {
+        "Title": "Monitoreo de Anfibios y Reptiles: Técnicas de Campo",
+        "Description": "Curso intensivo 3 días: transectos, trampas de caída, identificación por claves, toma de datos estandarizada, bioseguridad.",
+        "Syllabus": "## Día 1\n- Introducción a herpetofauna ecuatoriana\n- Técnicas de muestreo: transectos visuales, auditivos\n- Trampas de caída y embudos\n\n## Día 2\n- Identificación por claves dicotómicas\n- Manipulación segura y bioseguridad\n- Práctica en estación científica\n\n## Día 3\n- Análisis de datos y reporteo\n- Subida a plataformas (iNaturalist, GBIF)\n- Evaluación final",
+        "Price": 180.0,
+        "TotalSeats": 15,
+        "Modality": "Presencial",
+        "Venue": "Estación Científica Yasuní, Orellana",
+        "Instructor": "Dra. Andrea Terán",
+        "InstructorBio": "Herpetóloga, investigadora INABIO, especialista anfibios andinos",
+        "ImageUrl": "/images/cursos/herpetofauna.jpg",
+        "IsActive": true,
+        "RequiresPriorKnowledge": true,
+        "TargetAudience": "Biólogos, estudiantes avanzados, guardaparques",
+        "StartTime": "09:00:00",
+        "EndTime": "17:00:00"
+      }
+    },
+    {
+      "StartAfterDays": 30,
+      "EndAfterDays": 51,
+      "Value": {
+        "Title": "Fotografía de Biodiversidad para Ciencia Ciudadana",
+        "Description": "Taller virtual 4 sesiones: macrofotografía, iluminación, metadatos Darwin Core, subida a iNaturalist/GBIF, ética fotográfica.",
+        "Syllabus": "## Sesión 1: Equipo y fundamentos\n- Cámaras, lentes macro, iluminación\n- Configuración para metadatos\n\n## Sesión 2: Trabajo de campo\n- Técnicas macro y aproximación\n- Ética: distancia, manipulación, flash\n\n## Sesión 3: Post-procesado y metadatos\n- Lightroom/Capture One para ciencia\n- Darwin Core, coordenadas, taxonomía\n\n## Sesión 4: Publicación y comunidad\n- iNaturalist, GBIF, GBIF-Ecuador\n- Validación comunitaria, licencias CC",
+        "Price": 60.0,
+        "TotalSeats": 30,
+        "Modality": "Virtual",
+        "Venue": "Zoom (enlace enviado tras confirmación)",
+        "Instructor": "MSc. Pablo Jarrín",
+        "InstructorBio": "Fotógrafo naturaleza, colaborador iNaturalist, 50k+ observaciones",
+        "ImageUrl": "/images/cursos/foto-biodiversidad.jpg",
+        "IsActive": true,
+        "RequiresPriorKnowledge": false,
+        "TargetAudience": "Fotógrafos aficionados, naturalistas, estudiantes",
+        "StartTime": "10:00:00",
+        "EndTime": "13:00:00"
+      }
+    },
+    {
+      "StartAfterDays": 120,
+      "EndAfterDays": 121,
+      "SpeciesReference": "orquidea",
+      "Value": {
+        "Title": "Introducción a la Botánica de Campo: Familias de Orquídeas",
+        "Description": "Curso teórico-práctico: morfología floral, claves de identificación, colecta ética, herborización, bases de datos.",
+        "Syllabus": "## Día 1: Teoría y taller\n- Morfología floral Orchidaceae\n- Claves de identificación principales géneros\n- Ética colecta y permisos\n\n## Día 2: Práctica en jardín botánico\n- Identificación in situ\n- Técnicas herborizado\n- Registro en bases de datos",
+        "Price": 95.0,
+        "TotalSeats": 18,
+        "Modality": "Presencial",
+        "Venue": "Jardín Botánico de Quito",
+        "Instructor": "Ing. María González",
+        "InstructorBio": "Botánica, curadora herbario QCA, especialista Orchidaceae",
+        "ImageUrl": "/images/cursos/orquideas.jpg",
+        "IsActive": true,
+        "RequiresPriorKnowledge": false,
+        "TargetAudience": "Estudiantes biología, guías, viveristas",
+        "StartTime": "08:30:00",
+        "EndTime": "16:30:00"
+      }
+    }
+  ],
+  "Products": [
+    {
+      "SpeciesReference": "colibri",
+      "Value": {
+        "Name": "Poster A2: Aves Endémicas del Chocó",
+        "Description": "Ilustración científica 42x59cm, papel mate 200g, 42 especies con nombres común y científico",
+        "Price": 18.0,
+        "Stock": 50,
+        "MinStock": 5,
+        "SKU": "POS-AVES-CH-001",
+        "ImageUrl": "/images/productos/poster-aves-choco.jpg",
+        "IsActive": true
+      }
+    },
+    {
+      "SpeciesReference": "orquidea",
+      "Value": {
+        "Name": "Guía de Campo: Orquídeas de los Andes (Impresa)",
+        "Description": "120 spp, claves dicotómicas, 200 páginas, encuadernación espiral, resistente al agua",
+        "Price": 35.0,
+        "Stock": 30,
+        "MinStock": 3,
+        "SKU": "GUI-ORQ-AN-001",
+        "ImageUrl": "/images/productos/guia-orquideas.jpg",
+        "IsActive": true
+      }
+    },
+    {
+      "Value": {
+        "Name": "Kit Investigador Junior: Lupa 10x + Cuaderno Campo + Guía Bolsillo",
+        "Description": "Kit educativo para escuelas y clubes de ciencia: lupa acrílica 10x, cuaderno 100p resistente agua, guía 50 spp bolsillo",
+        "Price": 45.0,
+        "Stock": 20,
+        "MinStock": 2,
+        "SKU": "KIT-JUN-001",
+        "ImageUrl": "/images/productos/kit-junior.jpg",
+        "IsActive": true
+      }
+    }
+  ]
+}

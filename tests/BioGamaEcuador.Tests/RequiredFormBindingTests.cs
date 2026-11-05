@@ -24,6 +24,7 @@ public sealed class RequiredFormBindingTests
     [InlineData(typeof(LocationsController), "NaturalReserveId")]
     [InlineData(typeof(NaturalReservesController), "YearCreated")]
     [InlineData(typeof(SpeciesController), "IsEndemic")]
+    [InlineData(typeof(SpeciesController), "FamilyId")]
     [InlineData(typeof(RecordsController), "SpeciesId")]
     [InlineData(typeof(RecordsController), "LocationId")]
     [InlineData(typeof(RecordsController), "ResearcherId")]
